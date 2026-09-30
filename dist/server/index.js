@@ -13,17 +13,11 @@ function json(body, status = 200, cacheControl = "no-store") {
 
 async function readFeed(url) {
   const response = await fetch(url, { headers: { accept: "application/json" }, cf: { cacheTtl: 60, cacheEverything: true } });
-  if (!response.ok) throw new Error(`Feed returned HTTP ${response.status}`);
-  return response.json();
-}
-
-function list(payload) {
-  if (Array.isArray(payload)) return payload;
-  for (const key of ["data", "tenders", "items", "records", "results", "notices", "content"]) {
-    if (Array.isArray(payload?.[key])) return payload[key];
+  if (!response.ok || !response.body) {
+    await response.body?.cancel();
+    throw new Error(`Feed returned HTTP ${response.status}`);
   }
-  if (payload && typeof payload === "object") return Object.values(payload).find(Array.isArray) ?? null;
-  return null;
+  return response;
 }
 
 export default {
@@ -32,11 +26,33 @@ export default {
     if (url.pathname === "/api/tenders") {
       if (request.method !== "GET") return json({ error: "Method not allowed" }, 405);
       try {
-        const [activePayload, archivedPayload] = await Promise.all([readFeed(FEEDS.active), readFeed(FEEDS.archived)]);
-        const active = list(activePayload);
-        const archived = list(archivedPayload);
-        if (!active || !archived) throw new Error("Feed response did not contain tender lists");
-        return json({ source: "e-GP public tender feed", fetchedAt: new Date().toISOString(), active, archived }, 200, "public, max-age=60, stale-while-revalidate=300");
+        const [active, archived] = await Promise.all([readFeed(FEEDS.active), readFeed(FEEDS.archived)]);
+        const encoder = new TextEncoder();
+        const readers = [active.body.getReader(), archived.body.getReader()];
+        const stream = new ReadableStream({
+          async start(controller) {
+            try {
+              controller.enqueue(encoder.encode(`{"source":"e-GP public tender feed","fetchedAt":"${new Date().toISOString()}","active":`));
+              for (let i = 0; i < readers.length; i++) {
+                if (i) controller.enqueue(encoder.encode(',"archived":'));
+                while (true) {
+                  const { done, value } = await readers[i].read();
+                  if (done) break;
+                  controller.enqueue(value);
+                }
+              }
+              controller.enqueue(encoder.encode("}"));
+              controller.close();
+            } catch (error) {
+              await Promise.all(readers.map((reader) => reader.cancel(error).catch(() => {})));
+              controller.error(error);
+            }
+          },
+          async cancel(reason) {
+            await Promise.all(readers.map((reader) => reader.cancel(reason).catch(() => {})));
+          }
+        });
+        return new Response(stream, { headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=60, stale-while-revalidate=300" } });
       } catch (error) {
         return json({ error: "Unable to load the public tender feed", detail: String(error?.message || error) }, 502);
       }
