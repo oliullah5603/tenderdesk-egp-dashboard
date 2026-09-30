@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6f2">
+  <meta name="description" content="A clearer way to discover and track Bangladesh public procurement opportunities.">
+  <title>Tenderdesk — Bangladesh procurement intelligence</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#feed" aria-label="Tenderdesk home">
+        <span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 8h16v4H13v4h9v4h-9v5H8z"/><circle cx="23" cy="23" r="4"/></svg></span>
+        <span class="brand-word">tenderdesk<span class="brand-dot">.</span><small>PROCUREMENT INTELLIGENCE</small></span>
+      </a>
+      <div class="sidebar-label">WORKSPACE</div>
+      <nav class="side-nav" aria-label="Main navigation">
+        <button class="nav-item active" data-page="feed"><span class="nav-icon">▤</span><span>Opportunity feed</span><span class="nav-count" id="nav-live-count">0</span></button>
+        <button class="nav-item" data-page="insights"><span class="nav-icon">▥</span><span>Market insights</span></button>
+        <button class="nav-item" data-page="saved"><span class="nav-icon">♡</span><span>Saved tenders</span><span class="nav-count muted" id="saved-count">0</span></button>
+      </nav>
+      <div class="sidebar-label source-label">SOURCE</div>
+      <a class="source-card" href="https://eprocure.gov.bd/" target="_blank" rel="noreferrer">
+        <span class="source-icon">↗</span><span><b>Bangladesh e-GP</b><small>Official procurement portal</small></span>
+      </a>
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-note"><span class="note-dot"></span><span><b>e-GP public data</b><small>Feed status shown above</small></span></div>
+      <div class="profile-row"><div class="avatar">TD</div><div><b>Procurement desk</b><small>Connected data</small></div><span class="more-icon">···</span></div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="mobile-menu" id="menu-toggle" aria-label="Open navigation">☰</button>
+        <div class="crumb"><span>Workspace</span><span class="crumb-slash">/</span><b id="crumb-title">Opportunity feed</b></div>
+        <div class="top-actions"><span class="snapshot-pill connecting"><i></i> Connecting to e-GP</span><a class="icon-button" aria-label="e-GP help and FAQ" title="e-GP help and FAQ" href="https://eprocure.gov.bd/FAQ.jsp" target="_blank" rel="noreferrer">?</a><div class="avatar top-avatar">TD</div></div>
+      </header>
+      <div class="page-wrap">
+        <section id="feed-page" class="page active-page">
+          <div class="page-heading">
+            <div><div class="eyebrow"><span class="eyebrow-line"></span> BANGLADESH E-GP · OPPORTUNITY DESK</div><h1>Find your next<br><em>opportunity.</em></h1><p class="intro">Public procurement, organized around the details that matter.</p></div>
+            <div class="heading-date"><span class="date-icon">◷</span><span><b id="local-date">Today</b><small>Bangladesh Standard Time</small></span></div>
+          </div>
+          <div class="preview-callout"><span class="callout-icon">◷</span><span><b>Connecting to the public feed</b> Loading current notices from e-GP mirror storage…</span></div>
+
+          <div class="stats-grid">
+            <article class="stat-card stat-primary"><div class="stat-head"><span>LIVE NOTICES</span><span class="stat-icon">↗</span></div><div class="stat-value" id="stat-live">0</div><div class="stat-foot"><span class="live-dot"></span>Active opportunities <span class="stat-foot-right">e-GP feed</span></div></article>
+            <article class="stat-card"><div class="stat-head"><span>CLOSING IN 14 DAYS</span><span class="stat-icon pale">◷</span></div><div class="stat-value" id="stat-closing">0</div><div class="stat-foot"><span class="stat-sub-dot"></span>Worth a closer look <span class="stat-foot-right">live feed</span></div></article>
+            <article class="stat-card"><div class="stat-head"><span>LIVE MARKET VALUE</span><span class="stat-icon pale">৳</span></div><div class="stat-value" id="stat-value">—</div><div class="stat-foot"><span class="stat-sub-dot"></span>Estimated budgets shown <span class="stat-foot-right">live feed</span></div></article>
+          </div>
+
+          <section class="feed-panel">
+            <div class="section-top"><div><div class="section-kicker">PUBLIC NOTICES</div><h2>Opportunity feed <span class="heading-count" id="result-total">0</span></h2><p>Browse e-GP notices by status, agency, location and procurement type.</p></div><div class="section-actions"><button class="refresh-button" id="feed-refresh"><span>↻</span> Refresh</button><button class="refresh-button reset-button" id="clear-filters">Reset filters</button></div></div>
+            <div class="search-row"><label class="search-box"><span class="search-glyph">⌕</span><input id="search-input" type="search" placeholder="Search title, tender ID, agency or district…" autocomplete="off"><kbd>Ctrl K</kbd></label><span class="search-hint" id="search-hint">Search all notices</span></div>
+            <div class="filter-grid">
+              <label class="filter-control"><span>Nature</span><select id="filter-nature"><option value="">All natures</option></select></label>
+              <label class="filter-control"><span>Method</span><select id="filter-method"><option value="">All methods</option></select></label>
+              <label class="filter-control"><span>District</span><select id="filter-district"><option value="">All districts</option></select></label>
+              <label class="filter-control"><span>Organization</span><select id="filter-org"><option value="">All organizations</option></select></label>
+              <label class="filter-control"><span>Procuring entity</span><select id="filter-pe"><option value="">All entities</option></select></label>
+            </div>
+            <div class="feed-toolbar"><div class="status-tabs" role="tablist" aria-label="Tender status"><button class="status-tab active" data-status="live">Live <span id="tab-live">0</span></button><button class="status-tab" data-status="archived">Archived <span id="tab-archived">0</span></button><button class="status-tab" data-status="all">All <span id="tab-all">0</span></button></div><div class="view-tools"><span class="sorted-label">Sort by</span><select id="sort-select" aria-label="Sort tenders"><option value="closing">Closing soon</option><option value="newest">Recently published</option><option value="budget">Largest budget</option></select><button class="view-toggle selected" aria-label="Table view">☷</button></div></div>
+            <div class="table-wrap"><table class="tender-table"><thead><tr><th>NOTICE / AGENCY</th><th>TYPE</th><th>LOCATION</th><th>EST. BUDGET</th><th>DEADLINE</th><th></th></tr></thead><tbody id="tender-rows"></tbody></table><div class="empty-state" id="empty-state" hidden><span>⌕</span><b>No tenders match these filters</b><p>Try a different search or clear your filters.</p><button id="empty-reset">Clear filters</button></div></div>
+            <div class="table-footer"><span id="range-label">Showing 1–8 notices</span><div class="pagination" id="pagination"></div></div>
+          </section>
+          <footer class="page-footer"><span>Independent discovery interface · not affiliated with BPPA</span><a href="https://eprocure.gov.bd/TermsNConditions.jsp" target="_blank" rel="noreferrer">e-GP terms ↗</a></footer>
+        </section>
+
+        <section id="insights-page" class="page" hidden>
+          <div class="page-heading insights-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> PROCUREMENT MARKET · LIVE FEED</div><h1>See the market<br><em>more clearly.</em></h1><p class="intro">A practical view of published opportunity patterns.</p></div><div class="heading-date"><span class="date-icon">◷</span><span><b>Updated from public feed</b><small>Refresh to load the latest notices</small></span></div></div>
+          <div class="preview-callout"><span class="callout-icon">i</span><span><b>Public e-GP insights</b> Charts summarize the notices returned by the connected feed.</span><a href="#feed" data-go="feed">Browse notices →</a></div>
+          <div class="insight-filterbar"><label class="search-box insight-search"><span class="search-glyph">⌕</span><input id="insight-search" type="search" placeholder="Search titles, organizations or tender IDs…" autocomplete="off"></label><label class="filter-control"><span>PROCURING DISTRICT</span><select id="insight-district"><option value="">All districts</option></select></label><label class="filter-control"><span>PROCUREMENT NATURE</span><select id="insight-nature"><option value="">All natures</option><option>Goods</option><option>Works</option><option>Services</option></select></label><div class="metric-switch"><span>METRIC</span><button class="metric-btn active" data-metric="budget">Budget</button><button class="metric-btn" data-metric="count">Count</button></div></div>
+          <div class="insight-kpis"><article class="insight-kpi"><span>VISIBLE BUDGET</span><b id="insight-budget">—</b><small>From matching notices</small></article><article class="insight-kpi"><span>NOTICES</span><b id="insight-count">0</b><small>Across selected filters</small></article><article class="insight-kpi"><span>AVERAGE SIZE</span><b id="insight-average">—</b><small>Estimated value per notice</small></article><article class="insight-kpi"><span>LARGEST OPPORTUNITY</span><b id="insight-largest">—</b><small id="insight-largest-name">Across current feed</small></article></div>
+          <div class="insight-grid"><article class="chart-card ministry-card"><div class="chart-heading"><div><div class="section-kicker">WHERE THE SPEND IS</div><h2>Budget by organization</h2><p>Estimated value in the loaded feed</p></div><span class="chart-menu">•••</span></div><div id="org-chart" class="org-chart"></div><div class="chart-legend"><span><i></i>Estimated BDT</span><small>Current feed</small></div></article><article class="chart-card nature-card"><div class="chart-heading"><div><div class="section-kicker">WHAT'S BEING PROCURED</div><h2>Opportunity mix</h2><p>Notice count by procurement nature</p></div></div><div id="nature-chart" class="nature-chart"></div><div class="chart-note">Distribution updates with your filters.</div></article></div>
+          <article class="chart-card trendline-card"><div class="chart-heading"><div><div class="section-kicker">HISTORICAL ACTUALS · FORWARD ESTIMATE</div><h2>Publication trend & projection</h2><p>Projection uses a linear fit of notices in the current feed.</p></div><span class="projection-key"><i></i>Historical <i></i>Estimated</span></div><div id="trend-chart" class="trend-chart"></div><div class="chart-note">Projections are directional estimates from available public notices, not procurement commitments.</div></article>
+          <article class="chart-card trend-card"><div class="chart-heading"><div><div class="section-kicker">A CLOSER LOOK</div><h2>Largest opportunities</h2><p>Largest estimated budgets in the current feed selection</p></div><a class="text-link" href="#feed" data-go="feed">View all notices ↗</a></div><div class="table-wrap insight-table-wrap"><table class="tender-table"><thead><tr><th>TENDER ID</th><th>ORGANIZATION</th><th>PACKAGE DESCRIPTION</th><th>DISTRICT</th><th>NATURE</th><th>ESTIMATED BUDGET</th></tr></thead><tbody id="insight-rows"></tbody></table></div></article>
+          <footer class="page-footer"><span>Figures are derived from public notices. Verify procurement details on the official portal.</span><a href="https://eprocure.gov.bd/" target="_blank" rel="noreferrer">Open official portal ↗</a></footer>
+        </section>
+
+        <section id="saved-page" class="page" hidden>
+          <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> YOUR SHORTLIST</div><h1>Saved for<br><em>later.</em></h1><p class="intro">Keep the opportunities you want to come back to.</p></div></div>
+          <div class="saved-panel"><div class="section-kicker">YOUR WORKSPACE</div><h2>Saved tenders <span class="heading-count" id="saved-total">0</span></h2><div id="saved-list"></div></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="modal-backdrop" id="modal" hidden><section class="detail-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button class="modal-close" id="modal-close" aria-label="Close details">×</button><div id="modal-content"></div></section></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
