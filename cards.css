@@ -1,0 +1,84 @@
+.tender-cards[hidden],.table-wrap[hidden]{display:none!important}
+.tender-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;margin:14px 0 8px;align-items:start}
+.tender-card{min-width:0;padding:14px 14px 12px;border:1px solid #dfe5e1;border-radius:15px;background:#fff;box-shadow:0 5px 16px rgba(24,44,40,.055);display:flex;flex-direction:column;gap:8px;transition:border-color .16s,box-shadow .16s}
+.tender-card:hover{border-color:#c4d8ca;box-shadow:0 9px 24px rgba(24,44,40,.09)}
+.card-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:24px}
+.card-id,.card-chip,.card-nature{display:inline-flex;align-items:center;min-height:23px;padding:0 8px;border:1px solid #e1e7ec;border-radius:7px;background:#f4f7fa;color:#28415b;font-size:10px;font-weight:650;white-space:nowrap}
+.card-id{gap:3px;font-variant-numeric:tabular-nums}
+.card-id button{border:0;padding:1px 2px;background:transparent;color:#7a8a9a;cursor:pointer;font-size:11px}
+.method-chip{color:#176a51;background:#eff9f5;border-color:#bfe8d7}
+.fund-chip{color:#4d5c69}
+.card-nature{margin-left:auto}
+.card-agency{display:flex;align-items:center;gap:6px;min-width:0;color:#33483e;font-size:11px;line-height:1.35}
+.card-agency .pin{color:#15956b;font-size:14px;flex:none}
+.card-agency b{flex:none}
+.card-agency>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.agency-divider{color:#9aa8a0}
+.card-entity{color:#617068;font-size:10px;line-height:1.4;overflow-wrap:anywhere}
+.card-title-line{display:flex;align-items:flex-start;gap:6px;min-height:46px}
+.card-title{flex:1;min-width:0;padding:0;border:0;background:transparent;text-align:left;color:#172d28;font-size:13px;font-weight:700;line-height:1.43;cursor:pointer}
+.card-title:hover{color:#267353}
+.card-title-line .save-button{flex:none;margin-top:1px}
+.card-reference{margin-top:-5px;color:#839087;font-size:9px;font-weight:650;letter-spacing:.04em}
+.card-middle{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.eligibility-toggle{border:1px solid #e4eab4;border-radius:8px;background:#fffdf0;color:#614e9d;padding:5px 9px;font-size:10px;font-weight:700;cursor:pointer}
+.eligibility-toggle span{margin-left:3px}
+.countdown{display:inline-flex;align-items:center;justify-content:center;min-height:26px;padding:0 9px;border:1px solid #d9e3ec;border-radius:8px;background:#f3f7fb;color:#34516b;font-size:10px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.countdown.urgent,.time-left.urgent{color:#a24a36}
+.countdown.past{color:#8c554e;background:#fbf2f0;border-color:#ead5d1}
+.eligibility-detail{padding:11px 12px;border:1px solid #dce5eb;border-radius:11px;background:#f7f9fb;color:#43545f}
+.eligibility-detail[hidden]{display:none}
+.eligibility-detail>b{display:block;margin-bottom:6px;color:#405477;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.eligibility-detail p{margin:0;color:#33424d;font-size:11px;line-height:1.58;white-space:pre-wrap;overflow-wrap:anywhere}
+.eligibility-detail small{display:block;margin-top:8px;color:#7b888e;font-size:9px}
+.card-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid #edf0f2;border-radius:10px;background:#f7f9fb;overflow:hidden}
+.card-metrics>div{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:0;padding:8px 4px;text-align:center}
+.card-metrics>div+div{border-left:1px solid #dfe5e9}
+.card-metrics small,.card-dates small{color:#72818a;font-size:8px;font-weight:750;letter-spacing:.075em;text-transform:uppercase}
+.card-metrics b{color:#253d49;font-size:11px;font-weight:750;font-variant-numeric:tabular-nums}
+.card-dates{display:grid;grid-template-columns:.85fr 1.15fr 1.15fr;gap:5px;padding:7px 4px;border:1px solid #edf0f2;border-radius:9px;background:#fbfcfd}
+.card-dates>div{display:flex;flex-direction:column;gap:3px;min-width:0}
+.card-dates>div+div{padding-left:7px;border-left:1px solid #e5eaed}
+.card-dates b{color:#394a53;font-size:9px;font-weight:700;line-height:1.3;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.card-dates .time-left{text-align:center}
+.card-dates .time-left b{color:#278366;white-space:nowrap}
+.card-dates .deadline-date{text-align:right}
+.card-dates .deadline-date b{white-space:nowrap}
+.card-official{display:flex;align-items:center;justify-content:center;gap:7px;min-height:32px;border:1px solid #dce4e9;border-radius:9px;color:#263d50;text-decoration:none;font-size:11px;font-weight:700}
+.card-official:hover{border-color:#a9c7b4;background:#f5faf6;color:#216448}
+.card-official span{font-size:13px}
+.cards-empty{grid-column:1/-1;padding:34px 18px;border:1px dashed #d2dbd6;border-radius:14px;background:#fff;text-align:center;color:#607068}
+.cards-empty>b{color:#263d34;font-size:14px}
+.cards-empty p{margin:6px 0 14px;font-size:12px}
+.cards-empty button{padding:7px 12px;border:1px solid #d8e4dc;border-radius:8px;background:#fff;color:#276949;font-size:11px;font-weight:700;cursor:pointer}
+.view-tools{gap:6px}
+.view-toggle{height:28px;min-width:30px;border:1px solid #e0e7e2;border-radius:7px;background:#fff;color:#718077;cursor:pointer;font-size:14px}
+.view-toggle.selected{border-color:#b6d4bf;background:#edf6ee;color:#276949}
+@media(max-width:900px){.tender-cards{grid-template-columns:repeat(auto-fit,minmax(min(100%,285px),1fr))}}
+@media(max-width:600px){.tender-cards{grid-template-columns:1fr;gap:10px}.tender-card{padding:13px}.card-title{font-size:14px}.card-dates{grid-template-columns:.8fr 1.1fr 1.1fr}.card-dates small{font-size:7px}.card-dates b{font-size:9px}}
+.tender-cards{align-items:stretch}
+.tender-card{height:100%}
+.card-official{margin-top:auto}
+.card-title-line{min-height:72px}
+.card-title{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
+.tender-cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:900px){.tender-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.tender-cards{grid-template-columns:1fr}}
+.card-id,.card-chip,.card-nature{font-size:11px;min-height:25px}
+.card-agency{font-size:12px;line-height:1.45}
+.card-entity{font-size:11px;line-height:1.5;color:#475569}
+.card-title{font-size:15px;line-height:1.48}
+.card-reference{font-size:10px;line-height:1.45;color:#64748b}
+.eligibility-toggle{font-size:11px;padding:6px 10px}
+.countdown{font-size:11px;min-height:28px}
+.eligibility-detail p{font-size:12px;line-height:1.65;color:#334155}
+.eligibility-detail>b{font-size:11px}
+.eligibility-detail small{font-size:10px;color:#64748b}
+.card-metrics>div{padding:10px 5px}
+.card-metrics small,.card-dates small{font-size:9px;letter-spacing:.055em;color:#475569}
+.card-metrics b{font-size:13px}
+.card-dates{padding:9px 5px}
+.card-dates b{font-size:10px;line-height:1.4;color:#334155}
+.card-official{font-size:12px;min-height:36px}
+.card-official span{font-size:14px}
+@media(max-width:600px){.card-title{font-size:15px}.card-dates small{font-size:8px}.card-dates b{font-size:10px}}

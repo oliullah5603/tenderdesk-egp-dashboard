@@ -9,8 +9,9 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/cards.css">
 </head>
 <body>
   <div class="app-shell">
@@ -43,7 +44,7 @@
       <div class="page-wrap">
         <section id="feed-page" class="page active-page">
           <div class="page-heading">
-            <div><div class="eyebrow"><span class="eyebrow-line"></span> BANGLADESH E-GP · OPPORTUNITY DESK</div><h1>Find your next<br><em>opportunity.</em></h1><p class="intro">Public procurement, organized around the details that matter.</p></div>
+            <div><div class="eyebrow"><span class="eyebrow-line"></span> BANGLADESH E-GP · OPPORTUNITY DESK</div><h1>Find your next <em>opportunity.</em></h1><p class="intro">Public procurement, organized around the details that matter.</p></div>
             <div class="heading-date"><span class="date-icon">◷</span><span><b id="local-date">Today</b><small>Bangladesh Standard Time</small></span></div>
           </div>
           <div class="preview-callout"><span class="callout-icon">◷</span><span><b>Connecting to the public feed</b> Loading current notices from e-GP mirror storage…</span></div>
@@ -64,8 +65,9 @@
               <label class="filter-control"><span>Organization</span><select id="filter-org"><option value="">All organizations</option></select></label>
               <label class="filter-control"><span>Procuring entity</span><select id="filter-pe"><option value="">All entities</option></select></label>
             </div>
-            <div class="feed-toolbar"><div class="status-tabs" role="tablist" aria-label="Tender status"><button class="status-tab active" data-status="live">Live <span id="tab-live">0</span></button><button class="status-tab" data-status="archived">Archived <span id="tab-archived">0</span></button><button class="status-tab" data-status="all">All <span id="tab-all">0</span></button></div><div class="view-tools"><span class="sorted-label">Sort by</span><select id="sort-select" aria-label="Sort tenders"><option value="closing">Closing soon</option><option value="newest">Recently published</option><option value="budget">Largest budget</option></select><button class="view-toggle selected" aria-label="Table view">☷</button></div></div>
-            <div class="table-wrap"><table class="tender-table"><thead><tr><th>NOTICE / AGENCY</th><th>TYPE</th><th>LOCATION</th><th>EST. BUDGET</th><th>DEADLINE</th><th></th></tr></thead><tbody id="tender-rows"></tbody></table><div class="empty-state" id="empty-state" hidden><span>⌕</span><b>No tenders match these filters</b><p>Try a different search or clear your filters.</p><button id="empty-reset">Clear filters</button></div></div>
+            <div class="feed-toolbar"><div class="status-tabs" role="tablist" aria-label="Tender status"><button class="status-tab active" data-status="live">Live <span id="tab-live">0</span></button><button class="status-tab" data-status="archived">Archived <span id="tab-archived">0</span></button><button class="status-tab" data-status="all">All <span id="tab-all">0</span></button></div><div class="view-tools"><span class="sorted-label">Sort by</span><select id="sort-select" aria-label="Sort tenders"><option value="closing">Closing soon</option><option value="newest">Recently published</option><option value="budget">Largest budget</option></select><button class="view-toggle selected" data-view="cards" aria-label="Card view">▦</button><button class="view-toggle" data-view="table" aria-label="Table view">☷</button></div></div>
+            <div class="tender-cards" id="tender-cards"></div>
+            <div class="table-wrap" hidden><table class="tender-table"><thead><tr><th>NOTICE / AGENCY</th><th>TYPE</th><th>LOCATION</th><th>EST. BUDGET</th><th>DEADLINE</th><th></th></tr></thead><tbody id="tender-rows"></tbody></table><div class="empty-state" id="empty-state" hidden><span>⌕</span><b>No tenders match these filters</b><p>Try a different search or clear your filters.</p><button id="empty-reset">Clear filters</button></div></div>
             <div class="table-footer"><span id="range-label">Showing 1–8 notices</span><div class="pagination" id="pagination"></div></div>
           </section>
           <footer class="page-footer"><span>Independent discovery interface · not affiliated with BPPA</span><a href="https://eprocure.gov.bd/TermsNConditions.jsp" target="_blank" rel="noreferrer">e-GP terms ↗</a></footer>
@@ -92,5 +94,6 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="modal-backdrop" id="modal" hidden><section class="detail-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button class="modal-close" id="modal-close" aria-label="Close details">×</button><div id="modal-content"></div></section></div>
   <script src="/app.js" defer></script>
+  <script src="/cards.js" defer></script>
 </body>
 </html>
