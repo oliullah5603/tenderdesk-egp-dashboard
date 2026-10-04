@@ -25,6 +25,7 @@
         <button class="nav-item active" data-page="feed"><span class="nav-icon">▤</span><span>Opportunity feed</span><span class="nav-count" id="nav-live-count">0</span></button>
         <button class="nav-item" data-page="insights"><span class="nav-icon">▥</span><span>Market insights</span></button>
         <button class="nav-item" data-page="saved"><span class="nav-icon">♡</span><span>Saved tenders</span><span class="nav-count muted" id="saved-count">0</span></button>
+        <button class="nav-item" data-page="awards"><span class="nav-icon">▣</span><span>Contract awards</span><span class="nav-count muted" id="award-nav-count">BPPA</span></button>
       </nav>
       <div class="sidebar-label source-label">SOURCE</div>
       <a class="source-card" href="https://eprocure.gov.bd/" target="_blank" rel="noreferrer">
@@ -87,6 +88,24 @@
         <section id="saved-page" class="page" hidden>
           <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> YOUR SHORTLIST</div><h1>Saved for<br><em>later.</em></h1><p class="intro">Keep the opportunities you want to come back to.</p></div></div>
           <div class="saved-panel"><div class="section-kicker">YOUR WORKSPACE</div><h2>Saved tenders <span class="heading-count" id="saved-total">0</span></h2><div id="saved-list"></div></div>
+        </section>
+
+        <section id="awards-page" class="page" hidden>
+          <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> BANGLADESH PUBLIC PROCUREMENT AUTHORITY</div><h1>Contract <em>awards.</em></h1><p class="intro">Recently awarded public contracts, loaded from BPPA.</p></div><div class="heading-date"><span class="date-icon">◷</span><span><b id="award-updated">Connecting to BPPA…</b><small>Official contract-award register</small></span></div></div>
+          <div class="preview-callout" id="award-status"><span class="callout-icon">◷</span><span><b>Connecting to BPPA</b> Loading published contract awards…</span></div>
+          <section class="feed-panel award-panel">
+            <div class="section-top"><div><div class="section-kicker">PUBLIC AWARD RECORDS</div><h2>Contract awards <span class="heading-count" id="award-total">—</span></h2><p>Search and filter the official BPPA award register.</p></div><div class="section-actions"><button class="refresh-button" id="award-refresh"><span>↻</span> Refresh</button><button class="refresh-button reset-button" id="award-reset">Reset filters</button></div></div>
+            <div class="award-filters">
+              <label class="search-box award-search"><span class="search-glyph">⌕</span><input id="award-search" type="search" placeholder="Search this page: title, supplier, reference…" autocomplete="off"></label>
+              <label class="filter-control"><span>PROCUREMENT NATURE</span><select id="award-nature"><option value="0">All natures</option></select></label>
+              <label class="filter-control"><span>MINISTRY</span><select id="award-ministry"><option value="0">All ministries</option></select></label>
+              <label class="filter-control"><span>PROCUREMENT TYPE</span><select id="award-method"><option value="0">All types</option></select></label>
+              <label class="filter-control"><span>VIEW RESULTS BY</span><select id="award-view-by"><option value="consultantName">Supplier / contractor</option><option value="awardNotificationDate">Award date</option><option value="officeDistrictId">Procuring district</option></select></label>
+            </div>
+            <div class="award-table-wrap table-wrap"><table class="tender-table award-table"><thead><tr><th>MINISTRY / AGENCY · REFERENCE / TITLE</th><th>ENTITY / TYPE</th><th>DISTRICT</th><th>AWARDED TO</th><th>CONTRACT VALUE</th><th>AWARD DATE</th><th></th></tr></thead><tbody id="award-rows"></tbody></table><div class="empty-state" id="award-empty" hidden><span>⌕</span><b>No awards found on this page</b><p>Try another filter or move to a different results page.</p></div><div class="award-error" id="award-error" hidden><b>BPPA data could not be loaded</b><p id="award-error-message"></p><button class="refresh-button" id="award-retry">Retry</button></div></div>
+            <div class="table-footer"><span id="award-range">Loading official results…</span><div class="pagination"><button class="page-btn" id="award-prev" aria-label="Previous page">‹</button><span class="award-page-number" id="award-page-number">1</span><button class="page-btn" id="award-next" aria-label="Next page">›</button></div></div>
+          </section>
+          <footer class="page-footer"><span>Data source: Bangladesh Public Procurement Authority</span><a href="https://bppa.gov.bd/contract-award/contract-award-list.html" target="_blank" rel="noreferrer">Open official award register ↗</a></footer>
         </section>
       </div>
     </main>

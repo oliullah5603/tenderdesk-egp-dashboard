@@ -4,6 +4,9 @@
   "functions": {
     "api/tenders.js": {
       "maxDuration": 60
+    },
+    "api/contract-awards.js": {
+      "maxDuration": 30
     }
   }
 }
