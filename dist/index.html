@@ -18,8 +18,7 @@
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
       <a class="brand" href="#feed" aria-label="Infinico Tender Bd home">
-        <span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 7h7v18H7zM18 7h7v4h-7zM18 14h7v11h-7z"/><circle cx="23" cy="9" r="2"/></svg></span>
-        <span class="brand-word">infinico<span class="brand-dot">.</span><small>TENDER BD</small></span>
+        <img class="brand-logo" src="/assets/infinico-tender-bd-logo.png" alt="INFINICO TENDER BD">
       </a>
       <div class="sidebar-label">WORKSPACE</div>
       <nav class="side-nav" aria-label="Main navigation">
@@ -113,9 +112,8 @@
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="modal-backdrop" id="modal" hidden><section class="detail-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button class="modal-close" id="modal-close" aria-label="Close details">×</button><div id="modal-content"></div></section></div>
-  <script>window.TENDERDESK_CONFIG=window.TENDERDESK_CONFIG||{supabaseUrl:"",supabaseAnonKey:""};</script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/auth.js" defer></script>
+  <script>window.INFINICO_CONFIG={neonAuthUrl:"https://ep-empty-fire-b30dzqpr.neonauth.c-4.ap-southeast-1.aws.neon.tech/neondb/auth",neonDataApiUrl:"https://ep-empty-fire-b30dzqpr.apirest.c-4.ap-southeast-1.aws.neon.tech/neondb/rest/v1"};</script>
+  <script type="module" src="/auth.js"></script>
   <script src="/app.js" defer></script>
   <script src="/cards.js" defer></script>
 </body>

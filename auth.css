@@ -14,3 +14,47 @@
 .welcome-form input,.admin-footer input,.admin-footer select{border-color:#e8e8e8;border-radius:2px;color:#333;font-size:12px}.welcome-form input:focus,.admin-footer input:focus,.admin-footer select:focus{border-color:#ffb477;box-shadow:0 0 0 2px #ff720d16}.auth-submit{border-radius:2px;background:#ff720d;box-shadow:none}.auth-submit:hover{background:#e96500}.auth-footnote{color:#8c8c8c}.auth-config-note{border-radius:2px}
 .admin-menu-button{border-color:#eee;border-radius:2px;color:#df650a}.admin-backdrop{background:#20202066}.admin-panel{box-shadow:-14px 0 42px #00000018}.admin-panel h2{font:500 23px Poppins,"Hind Siliguri",sans-serif;color:#222}.admin-panel header p{color:#818181}.admin-summary{border-radius:2px;background:#fff3e9;color:#df650a}.admin-panel th{border-color:#eee;color:#8a8a8a;font-weight:500}.admin-panel td{border-color:#f0f0f0;color:#626262}.admin-panel td small{color:#919191}.admin-panel td button{border-color:#f3ddca;border-radius:2px;background:#fff8f2;color:#d9680b}.user-status{border-radius:2px}.admin-footer{border-color:#eee}.status-approved{background:#eaf6ee;color:#319367}.status-pending{background:#fff4e5;color:#ad7228}.status-blocked{background:#fff0ef;color:#c75d58}
 @media(max-width:760px){.welcome-art{background:#fbfbfb}}
+
+/* Refined sign-in and account administration for Infinico Tender Bd. */
+.brand{padding-bottom:34px}
+.brand-logo{display:block;width:100%;max-width:218px;height:auto;object-fit:contain;border-radius:8px}
+.welcome-gate{grid-template-columns:minmax(350px,.78fr) minmax(480px,1.22fr);min-height:100svh;background:#f8f8f7;color:#242424}
+.welcome-art{background:#fff;padding:34px clamp(28px,5vw,76px);border-right:1px solid #ececea}
+.welcome-logo{display:block;width:min(100%,370px);text-decoration:none}
+.welcome-logo img{display:block;width:100%;height:auto;object-fit:contain;border-radius:10px}
+.welcome-message{position:relative;z-index:2;max-width:430px;margin:auto 0}
+.welcome-message .section-kicker{font-size:10px;color:#818181;letter-spacing:1.15px}
+.welcome-message h2{margin:16px 0 12px;font:500 clamp(30px,3.2vw,46px)/1.2 Poppins,"Hind Siliguri",sans-serif;letter-spacing:-1.1px;color:#202020}
+.welcome-message h2 strong{font-weight:600;color:#ff720d}
+.welcome-message p{max-width:380px;font-size:14px;line-height:1.8;color:#777;margin:0}
+.welcome-art>small{font-size:9px;letter-spacing:.7px;color:#999}
+.welcome-form-wrap{background:#f8f8f7;padding:48px 32px}
+.welcome-form{width:min(430px,100%);padding:0}
+.welcome-form .section-kicker{font-size:10px;color:#e96500;letter-spacing:1.15px}
+.welcome-form h1{margin:12px 0 6px;font:500 32px/1.25 Poppins,"Hind Siliguri",sans-serif;letter-spacing:-.8px;color:#222}
+.welcome-subtitle{min-height:42px;margin:0 0 22px;font-size:13px;line-height:1.65;color:#777}
+.auth-tabs{display:flex;gap:0;padding:0;margin:0 0 25px;border-bottom:1px solid #e8e8e6;background:transparent;border-radius:0}
+.auth-tabs button{position:relative;height:43px;border:0;border-radius:0;background:transparent;color:#858585;font:500 13px Poppins,"Hind Siliguri",sans-serif;cursor:pointer}
+.auth-tabs button.active{color:#242424;box-shadow:none}
+.auth-tabs button.active:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#ff720d}
+.welcome-form form{gap:17px}
+.welcome-form form label{gap:8px;font-size:12px;font-weight:500;color:#444}
+.welcome-form input,.admin-footer input,.admin-footer select{height:48px;border:1px solid #e2e2e0;border-radius:4px;padding:0 13px;background:#fff;color:#282828;font:13px Poppins,"Hind Siliguri",sans-serif;transition:border-color .16s,box-shadow .16s}
+.welcome-form input::placeholder,.admin-footer input::placeholder{color:#a0a0a0}
+.welcome-form input:focus,.admin-footer input:focus,.admin-footer select:focus{border-color:#ff9e57;box-shadow:0 0 0 3px #ff720d15;outline:0}
+.welcome-form label[hidden]{display:none}
+.auth-submit{height:48px;border-radius:4px;background:#ff720d;color:#fff;font:500 13px Poppins,"Hind Siliguri",sans-serif;box-shadow:0 5px 13px #ff720d20;transition:background .16s,transform .16s}
+.auth-submit:hover{background:#ed6708;transform:translateY(-1px)}
+.auth-error{margin-top:15px;padding:11px 12px;border:1px solid #f2c6c0;background:#fff5f3;color:#a4473e;font-size:12px;line-height:1.5}
+.auth-footnote{margin-top:17px;font-size:11px;line-height:1.65;color:#898989}
+.admin-panel{font-family:Poppins,"Hind Siliguri",sans-serif}
+.admin-panel h2{font-weight:500}
+.admin-summary{border-radius:3px;background:#fff3e9;color:#de650b}
+.admin-panel th{font-weight:500}
+.admin-panel td{font-size:12px}
+.admin-panel td button{border-color:#f1ddca;border-radius:3px;background:#fff8f2;color:#d9680b}
+.admin-footer h3{margin:0 0 5px;font-size:15px;font-weight:500;color:#292929}
+.admin-footer p{margin:0 0 13px;font-size:12px;color:#858585}
+.admin-footer form{grid-template-columns:1.05fr 1fr 140px auto}
+.admin-footer .auth-submit{height:42px}
+@media(max-width:760px){.welcome-gate{grid-template-columns:1fr}.welcome-art{min-height:250px;padding:24px;border-right:0;border-bottom:1px solid #ececea}.welcome-logo{width:min(240px,72%)}.welcome-message{margin:25px 0 0}.welcome-message h2{font-size:28px;margin:10px 0 7px}.welcome-message p{font-size:12px;line-height:1.55}.welcome-art>small{margin-top:22px}.welcome-form-wrap{padding:32px 22px}.admin-footer form{grid-template-columns:1fr 1fr}.admin-footer input:first-child{grid-column:1/-1}}
