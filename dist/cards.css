@@ -82,3 +82,7 @@
 .card-official{font-size:12px;min-height:36px}
 .card-official span{font-size:14px}
 @media(max-width:600px){.card-title{font-size:15px}.card-dates small{font-size:8px}.card-dates b{font-size:10px}}
+
+.card-id,.card-chip,.card-nature,.card-agency,.card-entity,.card-title,.card-reference,.eligibility-toggle,.countdown,.eligibility-detail,.card-metrics,.card-dates,.card-official,.cards-empty{font-family:"DM Sans","Hind Siliguri",system-ui,sans-serif}
+.card-id,.card-chip,.card-nature{font-size:12px}.card-agency{font-size:13px;line-height:1.5}.card-entity{font-size:12px;line-height:1.55}.card-title{font-size:16px;line-height:1.5;letter-spacing:-.12px}.card-reference{font-size:11px;line-height:1.5;letter-spacing:0}.eligibility-toggle,.countdown{font-size:12px}.eligibility-detail p{font-size:13px;line-height:1.65}.eligibility-detail>b{font-size:12px}.eligibility-detail small{font-size:11px}.card-metrics small,.card-dates small{font-size:10px;letter-spacing:.035em}.card-metrics b{font-size:14px}.card-dates b{font-size:11px;line-height:1.5}.card-official{font-size:13px}.cards-empty p{font-size:14px}.cards-empty button{font-size:13px}
+@media(max-width:600px){.card-title{font-size:15px}.card-dates small{font-size:9px}.card-dates b{font-size:11px}}
