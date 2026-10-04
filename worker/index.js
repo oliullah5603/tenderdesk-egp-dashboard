@@ -1,4 +1,4 @@
-const PAGE_ASSETS = ["index.html", "styles.css", "app.js", "cards.css", "cards.js", "favicon.svg"];
+const PAGE_ASSETS = ["index.html", "styles.css", "app.js", "cards.css", "cards.js", "auth.css", "auth.js", "favicon.svg"];
 const FEEDS = {
   active: "https://pub-73034fb3150341c9b860d40d094b488f.r2.dev/tenders_active.json",
   archived: "https://pub-73034fb3150341c9b860d40d094b488f.r2.dev/tenders_archived.json"
