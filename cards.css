@@ -107,3 +107,12 @@
 .card-metrics b{font-weight:500}
 .card-official{font-weight:500}
 @media(max-width:600px){.card-title-line{min-height:0}.card-title{font-size:14px}}
+.card-id,.card-chip,.card-nature{background:#f8f6fb;border-color:#eee;color:#777}
+.method-chip,.fund-chip,.card-nature{background:#f8f6fb;border-color:#eee;color:#777}
+.card-title{font-size:14px;font-weight:500;line-height:1.55;letter-spacing:0;color:#312a2a}
+.eligibility-toggle,.countdown{border-color:#eee;background:#fff;color:#886cc0}
+.eligibility-detail{background:#f8f6fb;border-color:#f1f1f1}
+.card-metrics{background:#f8f6fb;border-color:#f1f1f1}
+.card-dates{background:#fff;border-color:#f1f1f1}
+.card-official{border-color:#eee;color:#555}
+.save-button:hover,.save-button.saved{color:#886cc0;background:#f8f6fb}
