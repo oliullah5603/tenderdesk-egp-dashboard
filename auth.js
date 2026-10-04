@@ -26,6 +26,8 @@
     const signup = next === "signup";
     form.elements.name.closest("label").hidden = !signup;
     form.elements.phone.closest("label").hidden = !signup;
+    form.elements.name.hidden = !signup;
+    form.elements.phone.hidden = !signup;
     form.elements.name.required = signup;
     form.elements.phone.required = signup;
     form.querySelector(".auth-submit").innerHTML = `${signup ? "Create account" : "Sign in"}<span>→</span>`;
