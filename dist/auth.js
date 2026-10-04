@@ -91,11 +91,11 @@
     try {
       let authResult;
       if (mode === "signup") {
-        authResult = await client.auth.signUp({ email: values.get("email").trim(), password: values.get("password"), options: { data: { name: values.get("name").trim() } } });
+        authResult = await client.auth.signUp({ email: values.get("email").trim(), password: values.get("password"), options: { data: { name: values.get("name").trim(), phone: values.get("phone").trim() } } });
         if (authResult.error) throw authResult.error;
         const session = authResult.data?.session;
         if (!session) {
-          setMessage("Your account was created. Sign in after email verification, then your access request will be submitted for review.");
+          setMessage("Your account was created. Verify your email if asked, then sign in here to finish your access setup.");
           setMode("login");
           return;
         }
@@ -135,9 +135,16 @@
     const { data, error } = await client.auth.getSession();
     const session = data?.session;
     if (error || !session?.user) { profile = null; return renderGate(); }
-    const { data: row, error: profileError } = await db.from("infinico_profiles").select("id,email,full_name,phone,status,role,created_at").eq("id", session.user.id).maybeSingle();
+    let { data: row, error: profileError } = await db.from("infinico_profiles").select("id,email,full_name,phone,status,role,created_at").eq("id", session.user.id).maybeSingle();
     if (profileError) return renderGate("We couldn't check workspace access. Please try again in a moment.");
-    if (!row) return renderGate("Finish creating your profile. Sign out and use Create account to submit your details.");
+    if (!row) {
+      const metadata = session.user.user_metadata || {};
+      if (!metadata.name || !metadata.phone) return renderGate("This account has no workspace profile yet. Sign up with your name and mobile number first.");
+      const { error: registerError } = await db.rpc("infinico_register_profile", { target_name: metadata.name, target_phone: metadata.phone });
+      if (registerError) return renderGate(registerError.message || "We couldn't finish your workspace profile. Please try again.");
+      ({ data: row, error: profileError } = await db.from("infinico_profiles").select("id,email,full_name,phone,status,role,created_at").eq("id", session.user.id).maybeSingle());
+      if (profileError || !row) return renderGate("Your account was created, but we couldn't load its workspace profile yet. Please retry.");
+    }
     profile = row;
     if (row.status !== "approved") return renderGate(row.status === "pending" ? "Your request is awaiting administrator approval." : "This account is not approved for workspace access.");
     gateNode?.remove(); gateNode = null;
