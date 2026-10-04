@@ -68,23 +68,46 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const query = new URLSearchParams();
-  const page = Math.max(0, Math.min(9999, Number.parseInt(req.query?.page || "0", 10) || 0));
-  query.set("page", String(page));
-  for (const key of ["procurementTypeId.id", "ministryId.id", "agencyId.id", "procurementMethodId.id", "viewResultBy"]) {
-    const value = req.query?.[key];
-    if (value && value !== "0") query.set(key, String(value).slice(0, 100));
-  }
-
   try {
-    const response = await fetch(`${SOURCE}?${query}`, {
-      headers: { accept: "text/html", "user-agent": "Tenderdesk public-data viewer/1.0" },
-      signal: AbortSignal.timeout(20000),
-    });
-    if (!response.ok) throw new Error(`BPPA returned HTTP ${response.status}`);
-    const html = await response.text();
-    const { records, total } = parseAwards(html);
-    if (!records.length && !/\bof\s+[\d,]+/i.test(html)) throw new Error("BPPA returned an unrecognized award list");
+    const params = new URLSearchParams();
+    for (const key of ["procurementTypeId.id", "ministryId.id", "agencyId.id", "procurementMethodId.id", "viewResultBy"]) {
+      const value = req.query?.[key];
+      if (value && value !== "0") params.set(key, String(value).slice(0, 100));
+    }
+    const page = Math.max(0, Math.min(9999, Number.parseInt(req.query?.page || "0", 10) || 0));
+    const fetchPage = async (pageNumber) => {
+      const query = new URLSearchParams(params);
+      query.set("page", String(pageNumber));
+      const response = await fetch(`${SOURCE}?${query}`, {
+        headers: { accept: "text/html", "user-agent": "Infinico Tender BD public-data viewer/1.0" },
+        signal: AbortSignal.timeout(20000),
+      });
+      if (!response.ok) throw new Error(`BPPA returned HTTP ${response.status}`);
+      const html = await response.text();
+      const parsed = parseAwards(html);
+      if (!parsed.records.length && !/\bof\s+[\d,]+/i.test(html)) throw new Error("BPPA returned an unrecognized award list");
+      return { ...parsed, html, page: pageNumber };
+    };
+
+    const scanStart = req.query?.scanStart;
+    if (scanStart !== undefined) {
+      const start = Math.max(0, Math.min(9999, Number.parseInt(scanStart, 10) || 0));
+      const count = Math.max(1, Math.min(8, Number.parseInt(req.query?.scanCount || "8", 10) || 8));
+      const pages = await Promise.all(Array.from({ length: count }, (_, index) => fetchPage(start + index)));
+      const first = pages[0];
+      const totalPages = Math.max(1, Math.ceil(first.total / Math.max(1, first.records.length || 10)));
+      const available = pages.filter((item) => item.records.length > 0 || item.page === 0);
+      res.setHeader("Content-Type", "application/json; charset=utf-8");
+      res.setHeader("Cache-Control", "public, s-maxage=60, stale-while-revalidate=300");
+      res.status(200).json({
+        source: SOURCE, fetchedAt: new Date().toISOString(), start, pagesScanned: available.length,
+        totalPages, pageSize: first.records.length || 10, total: first.total,
+        pages: available.map(({ page, records }) => ({ page, records })),
+      });
+      return;
+    }
+
+    const { records, total, html } = await fetchPage(page);
 
     res.setHeader("Content-Type", "application/json; charset=utf-8");
     res.setHeader("Cache-Control", "public, s-maxage=60, stale-while-revalidate=300");
