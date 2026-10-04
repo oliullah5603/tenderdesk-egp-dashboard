@@ -87,3 +87,13 @@ body,.main-area{background:#f3f0f9;color:#888;font-family:Poppins,"Hind Siliguri
 .award-table td{font-family:Poppins,"Hind Siliguri",sans-serif;font-size:12px;font-weight:400;color:#666;line-height:1.6}
 .award-table th{font-family:Poppins,"Hind Siliguri",sans-serif;font-size:10px;font-weight:500;letter-spacing:.04em;color:#888}
 .notice-title{font-family:Poppins,"Hind Siliguri",sans-serif;font-weight:500;letter-spacing:0}
+/* Infinico Tender Bd identity: ink, paper and jade accents. */
+:root{--ink:#25343b;--muted:#74828a;--line:#e7ecea;--paper:#f4f7f6;--surface:#fff;--forest:#fff;--green:#16866f;--lime:#16866f;--radius:10px;--shadow:0 1px 3px rgba(31,54,47,.035);background:#f4f7f6;color:#25343b}
+body,.main-area{background:#f4f7f6;color:#25343b}
+.brand{gap:10px}.brand-mark{background:#e4f4ef;border:1px solid #cee9df;border-radius:11px}.brand-mark svg{fill:#147d69}.brand-word{font:600 17px/1.1 Poppins,"Hind Siliguri",sans-serif;letter-spacing:-.45px;color:#25343b}.brand-dot{color:#16866f}.brand-word small{margin-top:4px;font:600 9px/1.2 Poppins,"Hind Siliguri",sans-serif;letter-spacing:1.4px;color:#16866f}
+.nav-item.active,.nav-item:hover{background:#e8f4f0;color:#147d69}.nav-icon,.nav-item.active .nav-icon,.source-icon{color:#16866f}.nav-count,.nav-count.muted{background:#e8f4f0;color:#147d69}.brand-mark svg{fill:#147d69}
+.avatar{background:#e3f1ec;color:#147d69}.top-avatar{font-weight:600}.snapshot-pill{background:#f3faf7;border-color:#deeee7;color:#437766}
+h1 em,.stat-primary .stat-icon,.stat-icon,.stat-icon.pale,.stat-primary .stat-icon,.heading-count,.status-tab.active,.status-tab.active span,.view-toggle.selected,.metric-btn.active,.award-table .row-open,.award-page-number,.save-button:hover,.save-button.saved{color:#16866f}
+.eyebrow-line,.status-tab.active:after,.bar-track i{background:#16866f}.date-icon,.callout-icon,.callout-icon.success,.heading-count,.status-tab span,.status-tab.active span,.view-toggle.selected,.metric-btn.active{background:#e8f4f0;border-color:#d7ebe3}
+.search-box:focus-within,.filter-control select:focus{border-color:#9fcdbd;box-shadow:0 0 0 2px rgba(22,134,111,.09)}
+.card-official:hover{background:#f3faf7;border-color:#cee9df;color:#147d69}.award-table tbody tr:hover{background:#f8fbfa}.toast{background:#245c50}
