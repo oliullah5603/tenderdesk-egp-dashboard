@@ -96,3 +96,14 @@
 .card-agency,.card-entity,.card-title,.card-reference,.eligibility-toggle,.countdown,.eligibility-detail,.card-metrics,.card-dates,.card-official,.cards-empty{font-family:Poppins,"Hind Siliguri",sans-serif}
 .card-agency{font-size:13px;color:#4c455c;line-height:1.5}.card-agency .pin{color:#886cc0}.card-entity{font-size:12px;line-height:1.55;color:#888191}.card-title{font-size:15px;line-height:1.55;color:#343044;letter-spacing:-.15px}.card-reference{font-size:10px;color:#928ba0}.eligibility-toggle{border-color:#e2d7f0;background:#faf8fd;color:#7659ae;border-radius:7px}.countdown{border-color:#e6ddf0;background:#faf8fd;color:#7659ae;border-radius:7px}.eligibility-detail{background:#faf8fd;border-color:#eee8f4;border-radius:9px}.eligibility-detail p{font-size:12px;line-height:1.65;color:#5d566c}.card-metrics{background:#f8f6fb;border-color:#eeeaf3;border-radius:9px}.card-metrics>div+div{border-color:#e9e3ef}.card-metrics small,.card-dates small{font-size:9px;color:#888195}.card-metrics b{font-size:13px;color:#39334a}.card-dates{background:#fff;border-color:#eeeaf3;border-radius:9px}.card-dates>div+div{border-color:#eeeaf3}.card-dates b{font-size:10px;color:#514a61}.card-dates .time-left b{color:#886cc0}.card-official{border-color:#e6e0ed;border-radius:8px;color:#7259a5;background:#fff}.card-official:hover{background:#f6f2fb;border-color:#cbb9e4;color:#7054a8}.save-button:hover,.save-button.saved{color:#886cc0;background:#f1eafb}
 @media(max-width:600px){.tender-card{padding:14px}.card-title{font-size:14px}}
+/* Fillow-like tender cards: calm type, clear metadata, equal card rhythm. */
+.tender-card{gap:9px}
+.card-title-line{min-height:82px}
+.card-title{font-size:14px;font-weight:500;line-height:1.55;letter-spacing:0;color:#343044}
+.card-agency{font-size:12px;font-weight:400;line-height:1.55;color:#4c455c}
+.card-entity{font-size:11px;line-height:1.55;color:#888191}
+.card-reference{font-size:10px;line-height:1.5;color:#928ba0}
+.card-metrics small,.card-dates small{font-weight:500;letter-spacing:.035em}
+.card-metrics b{font-weight:500}
+.card-official{font-weight:500}
+@media(max-width:600px){.card-title-line{min-height:0}.card-title{font-size:14px}}

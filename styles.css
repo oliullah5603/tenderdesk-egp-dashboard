@@ -60,3 +60,9 @@ button,input,select{font-family:Poppins,"Hind Siliguri",sans-serif}
 .table-footer,.page-footer{font-size:11px}.page-btn{font-size:12px}.page-footer a,.text-link{font-size:12px}.notice-title{font-size:13px;line-height:1.55}.notice-meta,.pe-line,.method-tag,.nature-tag{font-size:11px}.tender-table th{font-size:10px;letter-spacing:.06em}.tender-table td{font-size:12px}.sub-value,.deadline span{font-size:11px}.chart-heading h2{font-size:18px}.chart-heading p,.chart-note{font-size:12px}.org-label,.org-bar-row>b,.chart-legend,.nature-legend span,.nature-legend b{font-size:11px}.insight-kpi span,.insight-kpi small{font-size:10px}.insight-kpi b{font-size:22px}.modal-grid small,.eligibility-box>span{font-size:10px}.modal-grid b,.modal-org,.eligibility-box b{font-size:13px}.eligibility-box small{font-size:11px}
 .award-description>b,.award-entity>span,.award-supplier>b{font-size:13px}.award-description .award-reference{font-size:11px}.award-description>strong{font-size:14px;line-height:1.5}.award-description>small,.award-entity small,.award-supplier small{font-size:12px}.award-value{font-size:12px}
 @media(max-width:600px){body{font-size:15px}.nav-item{font-size:14px}.section-top h2{font-size:19px}.section-top p{font-size:12px}.refresh-button{font-size:11px}.filter-control select{font-size:13px}}
+/* Match Fillow's restrained white-card hierarchy across the dashboard. */
+.stat-card.stat-primary{background:#fff;border-color:#ece8f2;color:#343044}
+.stat-primary .stat-head,.stat-primary .stat-foot,.stat-primary .stat-foot-right{color:#888191}
+.stat-primary .stat-value{color:#343044}
+.stat-primary .stat-icon{background:#f0eafb;color:#886cc0}
+.stat-primary .live-dot{background:#51b88a}
