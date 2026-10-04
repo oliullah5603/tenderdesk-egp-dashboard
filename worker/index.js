@@ -26,33 +26,9 @@ export default {
     if (url.pathname === "/api/tenders") {
       if (request.method !== "GET") return json({ error: "Method not allowed" }, 405);
       try {
-        const [active, archived] = await Promise.all([readFeed(FEEDS.active), readFeed(FEEDS.archived)]);
-        const encoder = new TextEncoder();
-        const readers = [active.body.getReader(), archived.body.getReader()];
-        const stream = new ReadableStream({
-          async start(controller) {
-            try {
-              controller.enqueue(encoder.encode(`{"source":"e-GP public tender feed","fetchedAt":"${new Date().toISOString()}","active":`));
-              for (let i = 0; i < readers.length; i++) {
-                if (i) controller.enqueue(encoder.encode(',"archived":'));
-                while (true) {
-                  const { done, value } = await readers[i].read();
-                  if (done) break;
-                  controller.enqueue(value);
-                }
-              }
-              controller.enqueue(encoder.encode("}"));
-              controller.close();
-            } catch (error) {
-              await Promise.all(readers.map((reader) => reader.cancel(error).catch(() => {})));
-              controller.error(error);
-            }
-          },
-          async cancel(reason) {
-            await Promise.all(readers.map((reader) => reader.cancel(reason).catch(() => {})));
-          }
-        });
-        return new Response(stream, { headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=60, stale-while-revalidate=300" } });
+        const kind = url.searchParams.get("kind") === "archived" ? "archived" : "active";
+        const response = await readFeed(FEEDS[kind]);
+        return new Response(response.body, { headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=60, stale-while-revalidate=300", "x-feed-kind": kind } });
       } catch (error) {
         return json({ error: "Unable to load the public tender feed", detail: String(error?.message || error) }, 502);
       }

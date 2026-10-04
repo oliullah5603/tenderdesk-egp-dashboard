@@ -3,11 +3,11 @@ import { createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
 import path from "node:path";
 import { Readable } from "node:stream";
-import { once } from "node:events";
 
 const root = path.resolve("dist");
 const host = "127.0.0.1";
 const port = Number(process.env.PORT || 4173);
+const feedCache = new Map();
 const feeds = [
   "https://pub-73034fb3150341c9b860d40d094b488f.r2.dev/tenders_active.json",
   "https://pub-73034fb3150341c9b860d40d094b488f.r2.dev/tenders_archived.json"
@@ -19,38 +19,48 @@ const assets = new Map([
   ["/app.js", ["app.js", "text/javascript; charset=utf-8"]],
   ["/cards.css", ["cards.css", "text/css; charset=utf-8"]],
   ["/cards.js", ["cards.js", "text/javascript; charset=utf-8"]],
+  ["/auth.css", ["auth.css", "text/css; charset=utf-8"]],
+  ["/auth.js", ["auth.js", "text/javascript; charset=utf-8"]],
   ["/favicon.svg", ["favicon.svg", "image/svg+xml"]]
 ]);
 
 const server = createServer(async (request, response) => {
-  if (request.url === "/api/tenders" && request.method === "GET") {
+  if (new URL(request.url, `http://${host}:${port}`).pathname === "/api/tenders" && request.method === "GET") {
     let sources;
     try {
-      sources = await Promise.all(feeds.map((url) => fetch(url, {
+      const url = new URL(request.url, `http://${host}:${port}`);
+      const kind = url.searchParams.get("kind") === "archived" ? "archived" : "active";
+      const index = kind === "archived" ? 1 : 0;
+      let cached = feedCache.get(index);
+      if (cached?.data && cached.expires <= Date.now()) {
+        void fetch(feeds[index], { headers: { accept: "application/json" }, signal: AbortSignal.timeout(60_000) }).then(async res => {
+          if (!res.ok) throw new Error(`Feed returned HTTP ${res.status}`);
+          feedCache.set(index, { data: await res.json(), expires: Date.now() + 60_000 });
+        }).catch(() => {});
+      }
+      if (cached?.data && cached.expires > Date.now()) {
+        const body = JSON.stringify(cached.data);
+        response.writeHead(200, { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=60, stale-while-revalidate=300" });
+        response.end(JSON.stringify({ source:"e-GP public tender feed", kind, fetchedAt:new Date(cached.expires-60_000).toISOString(), data:cached.data }));
+        return;
+      }
+      sources = await fetch(feeds[index], {
         headers: { accept: "application/json" },
         signal: AbortSignal.timeout(60_000)
-      })));
-      const failed = sources.find((source) => !source.ok || !source.body);
-      if (failed) throw new Error(`Feed returned HTTP ${failed.status}`);
+      });
+      if (!sources.ok || !sources.body) throw new Error(`Feed returned HTTP ${sources.status}`);
+      const data = await sources.json();
+      cached = { data, expires: Date.now() + 60_000 };
+      feedCache.set(index, cached);
+      response.writeHead(200, { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=60, stale-while-revalidate=300" });
+      response.end(JSON.stringify({ source:"e-GP public tender feed", kind, fetchedAt:new Date().toISOString(), data }));
+      return;
     } catch (error) {
       response.writeHead(502, { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" });
       response.end(JSON.stringify({ error: "Unable to load the public tender feed", detail: String(error?.message || error) }));
       return;
     }
 
-    response.writeHead(200, {
-      "content-type": "application/json; charset=utf-8",
-      "cache-control": "public, max-age=60, stale-while-revalidate=300"
-    });
-    response.write(`{"source":"e-GP public tender feed","fetchedAt":"${new Date().toISOString()}","active":`);
-    for (let index = 0; index < sources.length; index++) {
-      if (index) response.write(',"archived":');
-      for await (const chunk of Readable.fromWeb(sources[index].body)) {
-        if (!response.write(chunk)) await once(response, "drain");
-      }
-    }
-    response.end("}");
-    return;
   }
 
   const asset = assets.get(new URL(request.url, `http://${host}:${port}`).pathname);

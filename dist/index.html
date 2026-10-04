@@ -3,15 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f5f6f2">
+  <meta name="theme-color" content="#f3f0f9">
   <meta name="description" content="A clearer way to discover and track Bangladesh public procurement opportunities.">
   <title>Tenderdesk — Bangladesh procurement intelligence</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/cards.css">
+  <link rel="stylesheet" href="/auth.css">
 </head>
 <body>
   <div class="app-shell">
@@ -112,6 +113,9 @@
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="modal-backdrop" id="modal" hidden><section class="detail-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button class="modal-close" id="modal-close" aria-label="Close details">×</button><div id="modal-content"></div></section></div>
+  <script>window.TENDERDESK_CONFIG=window.TENDERDESK_CONFIG||{supabaseUrl:"",supabaseAnonKey:""};</script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/auth.js" defer></script>
   <script src="/app.js" defer></script>
   <script src="/cards.js" defer></script>
 </body>
