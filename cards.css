@@ -107,6 +107,18 @@
 .card-metrics b{font-weight:500}
 .card-official{font-weight:500}
 @media(max-width:600px){.card-title-line{min-height:0}.card-title{font-size:14px}}
+/* Uena-inspired Infinico opportunity cards: restrained borders, orange accents, readable procurement details. */
+.tender-cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch;margin:18px 0 10px}
+.tender-card{height:100%;min-height:360px;padding:16px;border:1px solid #eaeaea;border-radius:2px;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.025);gap:9px;transition:border-color .16s,box-shadow .16s}
+.tender-card:hover{border-color:#ffc18f;box-shadow:0 8px 22px rgba(0,0,0,.055);transform:translateY(-1px)}
+.card-id,.card-chip,.card-nature{background:#fafafa;border:1px solid #ededed;border-radius:2px;color:#666;font:500 10px Poppins,"Hind Siliguri",sans-serif;min-height:24px}
+.method-chip{background:#fff7f1;border-color:#f9dfcd;color:#c95a00}.fund-chip{background:#fafafa;color:#666}.card-nature{background:#f2f5f8;color:#4d6377}
+.card-agency,.card-entity,.card-title,.card-reference,.eligibility-toggle,.countdown,.eligibility-detail,.card-metrics,.card-dates,.card-official,.cards-empty{font-family:Poppins,"Hind Siliguri",sans-serif}
+.card-agency{font-size:12px;color:#444;line-height:1.5}.card-agency .pin{color:#f27a1a}.card-entity{font-size:11px;line-height:1.5;color:#777}.card-title-line{min-height:78px}.card-title{font-size:14px;line-height:1.5;color:#222;letter-spacing:0;font-weight:500}.card-reference{font-size:10px;color:#8c8c8c;line-height:1.5}
+.eligibility-toggle{border:1px solid #f0dccc;border-radius:2px;background:#fff;color:#d9680b}.countdown{border:1px solid #e7e7e7;border-radius:2px;background:#fff;color:#6e6e6e}.eligibility-detail{background:#fff;border-color:#ececec;border-radius:2px}.eligibility-detail p{font-size:11px;line-height:1.6;color:#595959}
+.card-metrics{background:#fafafa;border-color:#ededed;border-radius:2px}.card-metrics>div+div,.card-dates>div+div{border-color:#e9e9e9}.card-metrics small,.card-dates small{font-size:8px;color:#888;font-weight:500;letter-spacing:.035em}.card-metrics b{font-size:12px;font-weight:500;color:#333}.card-dates{background:#fff;border-color:#ededed;border-radius:2px}.card-dates b{font-size:9px;color:#444}.card-dates .time-left b{color:#31976a}.card-official{border-color:#e7e7e7;border-radius:2px;color:#333;background:#fff;font-weight:500}.card-official:hover{background:#fff6ef;border-color:#ffc18f;color:#d96500}.save-button:hover,.save-button.saved{color:#f27412;background:#fff2e8}
+@media(max-width:1100px){.tender-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.tender-cards{grid-template-columns:1fr;gap:12px}.tender-card{min-height:0;padding:14px}.card-title-line{min-height:0}.card-title{font-size:14px}}
 .card-id,.card-chip,.card-nature{background:#f8f6fb;border-color:#eee;color:#777}
 .method-chip,.fund-chip,.card-nature{background:#f8f6fb;border-color:#eee;color:#777}
 .card-title{font-size:14px;font-weight:500;line-height:1.55;letter-spacing:0;color:#312a2a}
