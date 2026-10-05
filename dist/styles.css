@@ -178,3 +178,9 @@ html,body{background:#fbfbfb;color:#7e7e7e;font-family:Poppins,"Hind Siliguri",s
   .filter-grid { grid-template-columns:1fr; }
   .admin-setting-row { flex-direction:column; }
 }
+.invite-link-result { margin-top:16px; padding:13px; border:1px solid #f1ddca; background:#fffaf6; }
+.invite-link-result[hidden] { display:none; }
+.invite-link-result label { display:block; margin-bottom:7px; color:#777; font-size:10px; }
+.invite-link-result > div { display:flex; gap:8px; }
+.invite-link-result input { flex:1; min-width:0; height:40px; padding:0 10px; border:1px solid #e8e8e8; border-radius:3px; background:#fff; color:#555; font:11px Poppins,sans-serif; }
+.invite-link-result button { flex:none; padding:0 13px; border:0; border-radius:3px; background:#ff720d; color:white; font:500 11px Poppins,sans-serif; cursor:pointer; }

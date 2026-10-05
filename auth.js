@@ -12,6 +12,8 @@
   let settings = { alerts: true, interval: 15000 };
   let gateNode = null;
   let mode = "login";
+  const inviteEmail = new URLSearchParams(location.search).get("invite")?.trim().toLowerCase() || "";
+  const inviteName = new URLSearchParams(location.search).get("name")?.trim() || "";
 
   const setMessage = message => {
     const node = gateNode?.querySelector("#auth-message");
@@ -73,6 +75,17 @@
       document.body.append(gateNode);
       gateNode.querySelectorAll("[data-auth-tab]").forEach(button => button.addEventListener("click", () => setMode(button.dataset.authTab)));
       gateNode.querySelector("#auth-form").addEventListener("submit", submitAuth);
+      if (inviteEmail) {
+        const form = gateNode.querySelector("#auth-form");
+        form.elements.email.value = inviteEmail;
+        form.elements.email.readOnly = true;
+        form.elements.name.value = inviteName;
+        form.elements.name.readOnly = Boolean(inviteName);
+        gateNode.querySelector("[data-auth-tab='signup']").textContent = "Set password";
+        gateNode.querySelector("#welcome-form h1").textContent = "You’re invited";
+        setMode("signup");
+        setMessage(`Create your password for ${inviteEmail}. Confirm your mobile number to activate the invited workspace account.`);
+      }
     }
     gateNode.hidden = false;
     shell.hidden = true;
@@ -103,7 +116,9 @@
         if (!session) {
           gateNode.querySelector("#auth-error").hidden = true;
           setMode("login");
-          setMessage(`Account created for ${values.get("email").trim()}. Check your inbox and verify the email, then sign in to submit your access request. Your request appears in the admin Users tab after verification and sign-in.`);
+          setMessage(inviteEmail
+            ? `Account created for ${values.get("email").trim()}. Verify the email from your inbox, then sign in with the password you just set. This invitation grants access automatically.`
+            : `Account created for ${values.get("email").trim()}. Verify the email from your inbox, then sign in to submit your access request. The admin will see it in Users.`);
           return;
         }
         const { error: profileError } = await db.rpc("infinico_register_profile", { target_name: values.get("name").trim(), target_phone: values.get("phone").trim() });
@@ -170,6 +185,11 @@
     if (interval) { interval.value = String(settings.interval); interval.onchange = () => { settings.interval = Number(interval.value); saveSettings(); startAdminPolling(); }; }
     document.querySelector("#admin-users-refresh")?.addEventListener("click", loadAdminUsers);
     document.querySelector("#invite-form")?.addEventListener("submit", createInvite);
+    document.querySelector("#copy-invite-link")?.addEventListener("click", async () => {
+      const input = document.querySelector("#invite-link");
+      try { await navigator.clipboard.writeText(input.value); toast("Invite link copied."); }
+      catch { input.select(); document.execCommand("copy"); toast("Invite link copied."); }
+    });
     loadAdminUsers();
     startAdminPolling();
   }
@@ -231,10 +251,18 @@
     event.preventDefault();
     const form = event.currentTarget; const values = new FormData(form); const button = form.querySelector("button");
     button.disabled = true;
-    const { error } = await db.rpc("infinico_admin_create_invite", { target_email: values.get("email").trim(), target_name: values.get("name").trim(), target_role: values.get("role") });
+    const email = values.get("email").trim().toLowerCase(), name = values.get("name").trim();
+    const { error } = await db.rpc("infinico_admin_create_invite", { target_email: email, target_name: name, target_role: values.get("role") });
     button.disabled = false;
     if (error) { toast(error.message); return; }
-    form.reset(); toast("Approved sign-up invite created."); loadAdminUsers();
+    const inviteUrl = new URL(location.origin + location.pathname);
+    inviteUrl.searchParams.set("invite", email);
+    inviteUrl.searchParams.set("name", name);
+    inviteUrl.hash = "signup";
+    const result = document.querySelector("#invite-link-result");
+    result.querySelector("#invite-link").value = inviteUrl.toString();
+    result.hidden = false;
+    form.reset(); toast("Invite created. Copy and share the link."); loadAdminUsers();
   }
 
   if (!config.neonAuthUrl || !config.neonDataApiUrl) {
