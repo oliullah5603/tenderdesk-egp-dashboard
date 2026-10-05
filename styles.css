@@ -103,3 +103,78 @@ html,body{background:#fbfbfb;color:#7e7e7e;font-family:Poppins,"Hind Siliguri",s
 @media(max-width:1100px){.sidebar{width:238px}.main-area{margin-left:238px}.page-wrap{padding:28px 24px 18px}}
 @media(max-width:850px){.sidebar{width:100%;box-shadow:none;border-right:0;border-bottom:1px solid #eee}.main-area{margin-left:0}.topbar{padding:0 20px}.page-wrap{padding:27px 20px 17px}}
 @media(max-width:600px){.page-wrap{padding:22px 12px 14px}.stats-grid{gap:8px}.stat-card,.stat-card.stat-primary{height:102px;padding:12px}.stat-head{font-size:8px}.stat-value,.stat-primary .stat-value{font-size:21px}.section-top{padding:16px 14px 13px}.section-top h2{font-size:18px}.feed-panel{border-radius:2px}.search-row,.filter-grid,.feed-toolbar{padding-left:13px;padding-right:13px}}
+/* Admin workspace pages and mobile navigation fixes. */
+.admin-nav-label[hidden], .admin-side-nav[hidden] { display:none !important; }
+.admin-page-panel { overflow:hidden; }
+.admin-page-table { padding:0 22px; }
+.admin-page-table table { width:100%; min-width:720px; border-collapse:collapse; text-align:left; }
+.admin-page-table th { height:42px; border-bottom:1px solid #eee; color:#929292; font-size:9px; font-weight:500; letter-spacing:.7px; white-space:nowrap; }
+.admin-page-table td { padding:13px 9px; border-bottom:1px solid #f0f0f0; color:#656565; font-size:11px; vertical-align:middle; }
+.admin-page-table td:first-child { padding-left:0; }
+.admin-page-table td b,.admin-page-table td small { display:block; }
+.admin-page-table td b { color:#333; font-weight:500; }
+.admin-page-table td small { margin-top:3px; color:#929292; font-size:10px; }
+.admin-page-table td button { padding:7px 10px; border:1px solid #f1ddca; border-radius:3px; background:#fff8f2; color:#d9680b; font:500 10px Poppins,sans-serif; cursor:pointer; white-space:nowrap; }
+.admin-page-table td button:disabled { opacity:.55; cursor:wait; }
+.admin-footer { margin:0 22px 22px; padding-top:20px; border-top:1px solid #eee; }
+.admin-footer form { grid-template-columns:minmax(160px,1.05fr) minmax(140px,1fr) 140px auto; }
+.admin-settings-panel { padding-bottom:8px; }
+.admin-setting-row { display:flex; align-items:center; justify-content:space-between; gap:24px; min-height:88px; padding:18px 22px; border-top:1px solid #eee; }
+.admin-setting-row b { color:#333; font-size:13px; font-weight:500; }
+.admin-setting-row p { margin:5px 0 0; color:#858585; font-size:11px; line-height:1.6; }
+.admin-interval { min-height:38px; padding:0 10px; border:1px solid #e7e7e7; border-radius:3px; background:#fff; color:#555; font:11px Poppins,sans-serif; }
+.settings-status { padding:6px 9px; background:#f5f5f5; color:#777; font-size:10px; white-space:nowrap; }
+.admin-switch { position:relative; display:block; flex:none; width:42px; height:24px; }
+.admin-switch input { position:absolute; opacity:0; width:1px; height:1px; }
+.admin-switch span { position:absolute; inset:0; border-radius:20px; background:#ddd; cursor:pointer; transition:.18s; }
+.admin-switch span:before { content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:#fff; box-shadow:0 1px 3px #0002; transition:.18s; }
+.admin-switch input:checked + span { background:#ff720d; }
+.admin-switch input:checked + span:before { transform:translateX(18px); }
+.sidebar-backdrop { display:none; }
+@media(max-width:850px) {
+  #sidebar.sidebar { position:fixed; inset:0 auto 0 0; width:min(292px,86vw) !important; height:100dvh; max-height:100dvh; padding:22px 18px 16px; overflow-y:auto; overscroll-behavior:contain; transform:translateX(-105%); transition:transform .22s ease; z-index:91; border-right:1px solid #eee; border-bottom:0; box-shadow:14px 0 35px #1112; }
+  #sidebar.sidebar.open { transform:translateX(0); }
+  #sidebar .brand { padding-bottom:26px; }
+  .main-area { margin-left:0 !important; min-width:0; }
+  .sidebar-backdrop:not([hidden]) { display:block; position:fixed; inset:0; z-index:90; border:0; background:rgba(20,24,22,.42); backdrop-filter:blur(1px); }
+  .sidebar-backdrop[hidden] { display:none !important; }
+  body.menu-open { overflow:hidden; }
+  .mobile-menu { display:grid !important; place-items:center; flex:none; width:40px !important; height:40px !important; font-size:18px; }
+  .topbar { position:sticky; top:0; z-index:40; min-width:0; padding:0 18px !important; }
+  .top-actions { min-width:0; }
+  .crumb { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .page-wrap { width:100%; min-width:0; padding-left:20px !important; padding-right:20px !important; }
+  .page { min-width:0; }
+  .feed-panel,.saved-panel,.chart-card { min-width:0; }
+  .admin-page-table { overflow-x:auto; padding:0 16px; }
+  .admin-footer { margin-left:16px; margin-right:16px; }
+}
+@media(max-width:600px) {
+  .topbar { height:58px; gap:10px; padding:0 12px !important; }
+  .mobile-menu { width:38px !important; height:38px !important; }
+  .crumb { font-size:10px; }
+  .top-actions .snapshot-pill { max-width:132px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .top-avatar { display:none; }
+  .page-wrap { padding:20px 12px 14px !important; }
+  .page-heading { min-width:0; }
+  .page-heading h1 { overflow-wrap:anywhere; font-size:clamp(29px,8vw,38px); }
+  .section-top { flex-wrap:wrap; gap:10px; }
+  .section-top > div:first-child { min-width:0; }
+  .admin-page-table { padding:0 12px; }
+  .admin-footer { margin:0 12px 16px; }
+  .admin-footer form { grid-template-columns:1fr; }
+  .admin-footer input:first-child { grid-column:auto; }
+  .admin-setting-row { align-items:flex-start; gap:12px; padding:16px 14px; }
+  .admin-setting-row > div { min-width:0; }
+  .admin-interval { max-width:145px; }
+  .settings-status { flex:none; }
+  .award-table-wrap { max-width:100%; }
+  .tender-cards { grid-template-columns:repeat(1,minmax(0,1fr)); }
+  .filter-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:380px) {
+  .page-wrap { padding-left:9px !important; padding-right:9px !important; }
+  .snapshot-pill { display:none; }
+  .filter-grid { grid-template-columns:1fr; }
+  .admin-setting-row { flex-direction:column; }
+}

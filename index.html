@@ -27,6 +27,11 @@
         <button class="nav-item" data-page="saved"><span class="nav-icon">♡</span><span>Saved tenders</span><span class="nav-count muted" id="saved-count">0</span></button>
         <button class="nav-item" data-page="awards"><span class="nav-icon">▣</span><span>Contract awards</span><span class="nav-count muted" id="award-nav-count">BPPA</span></button>
       </nav>
+      <div class="sidebar-label admin-nav-label" id="admin-nav-label" hidden>ADMINISTRATION</div>
+      <nav class="side-nav admin-side-nav" id="admin-side-nav" aria-label="Administration" hidden>
+        <button class="nav-item" data-page="users"><span class="nav-icon">♙</span><span>Users</span><span class="nav-count muted" id="admin-pending-count" hidden>0</span></button>
+        <button class="nav-item" data-page="admin-settings"><span class="nav-icon">⚙</span><span>Settings</span></button>
+      </nav>
       <div class="sidebar-label source-label">SOURCE</div>
       <a class="source-card" href="https://eprocure.gov.bd/" target="_blank" rel="noreferrer">
         <span class="source-icon">↗</span><span><b>Bangladesh e-GP</b><small>Official procurement portal</small></span>
@@ -35,10 +40,11 @@
       <div class="sidebar-note"><span class="note-dot"></span><span><b>e-GP public data</b><small>Feed status shown above</small></span></div>
       <div class="profile-row"><div class="avatar">IB</div><div><b>Infinico Tender Bd</b><small>Connected data</small></div><span class="more-icon">···</span></div>
     </aside>
+    <button class="sidebar-backdrop" id="sidebar-backdrop" type="button" aria-label="Close navigation" hidden></button>
 
     <main class="main-area">
       <header class="topbar">
-        <button class="mobile-menu" id="menu-toggle" aria-label="Open navigation">☰</button>
+        <button class="mobile-menu" id="menu-toggle" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">☰</button>
         <div class="crumb"><span>Workspace</span><span class="crumb-slash">/</span><b id="crumb-title">Opportunity feed</b></div>
         <div class="top-actions"><span class="snapshot-pill connecting"><i></i> Connecting to e-GP</span><a class="icon-button" aria-label="e-GP help and FAQ" title="e-GP help and FAQ" href="https://eprocure.gov.bd/FAQ.jsp" target="_blank" rel="noreferrer">?</a><div class="avatar top-avatar">IB</div></div>
       </header>
@@ -106,6 +112,14 @@
             <div class="table-footer"><span id="award-range">Loading official results…</span><div class="pagination"><button class="page-btn" id="award-prev" aria-label="Previous page">‹</button><span class="award-page-number" id="award-page-number">1</span><button class="page-btn" id="award-next" aria-label="Next page">›</button></div></div>
           </section>
           <footer class="page-footer"><span>Data source: Bangladesh Public Procurement Authority</span><a href="https://bppa.gov.bd/contract-award/contract-award-list.html" target="_blank" rel="noreferrer">Open official award register ↗</a></footer>
+        </section>
+        <section id="users-page" class="page" hidden>
+          <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> ADMINISTRATION</div><h1>Workspace <em>users.</em></h1><p class="intro">Review access requests, manage member access and send invitations.</p></div></div>
+          <section class="feed-panel admin-page-panel"><div class="section-top"><div><div class="section-kicker">ACCOUNT ACCESS</div><h2>Users <span class="heading-count" id="admin-users-count">—</span></h2><p id="admin-users-summary">Loading workspace accounts…</p></div><div class="section-actions"><button class="refresh-button" id="admin-users-refresh">↻ Refresh</button></div></div><div class="admin-table-wrap admin-page-table"><table><thead><tr><th>MEMBER</th><th>MOBILE</th><th>STATUS</th><th>ROLE</th><th>JOINED</th><th>ACTION</th></tr></thead><tbody id="admin-users"></tbody></table></div><div class="admin-footer"><h3>Invite an account</h3><p>They will set their own password and required mobile number when they sign up.</p><form id="invite-form"><input type="email" name="email" placeholder="Email address" required><input name="name" placeholder="Full name" required><select name="role"><option value="member">Member</option><option value="admin">Admin</option></select><button class="auth-submit">Create invite</button></form></div></section>
+        </section>
+        <section id="admin-settings-page" class="page" hidden>
+          <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> ADMINISTRATION</div><h1>Admin <em>settings.</em></h1><p class="intro">Configure how this browser keeps you informed about account access.</p></div></div>
+          <section class="feed-panel admin-settings-panel"><div class="section-top"><div><div class="section-kicker">NOTIFICATIONS & ACCESS</div><h2>Workspace settings</h2><p>Admin settings apply to this browser while you are signed in.</p></div></div><div class="admin-setting-row"><div><b>New account request alerts</b><p>Show an in-app alert when a new user finishes signup and requests approval.</p></div><label class="admin-switch"><input id="admin-alerts-enabled" type="checkbox"><span></span></label></div><div class="admin-setting-row"><div><b>Check for requests</b><p>Polling only runs while an administrator is signed in and this page is open.</p></div><select id="admin-poll-interval" class="admin-interval"><option value="15000">Every 15 seconds</option><option value="30000">Every 30 seconds</option><option value="60000">Every minute</option></select></div><div class="admin-setting-row"><div><b>Email notifications</b><p>No email provider is configured. New requests appear in the Users tab and as in-app alerts.</p></div><span class="settings-status">Not configured</span></div></section>
         </section>
       </div>
     </main>

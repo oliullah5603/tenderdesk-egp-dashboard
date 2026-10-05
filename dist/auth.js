@@ -2,11 +2,14 @@
   const config = window.INFINICO_CONFIG || {};
   const shell = document.querySelector(".app-shell");
   if (!shell) return;
+  window.INFINICO_ADMIN = false;
   const safe = value => String(value || "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   let client;
   let db;
   let profile = null;
-  let adminPanel = null;
+  let adminPollTimer = null;
+  let pendingIds = new Set();
+  let settings = { alerts: true, interval: 15000 };
   let gateNode = null;
   let mode = "login";
 
@@ -36,6 +39,9 @@
       : "Need access? Create an account. New accounts need administrator approval.";
     setMessage(signup ? "Request access to your procurement workspace." : "Sign in to discover Bangladesh's public opportunities.");
   };
+
+  function adminOnly() { return profile?.role === "admin" && profile?.status === "approved"; }
+  window.INFINICO_ADMIN_API = { loadUsers: () => adminOnly() && loadAdminUsers() };
 
   function renderGate(message = "") {
     shell.hidden = true;
@@ -95,8 +101,9 @@
         if (authResult.error) throw authResult.error;
         const session = authResult.data?.session;
         if (!session) {
-          setMessage("Your account was created. Verify your email if asked, then sign in here to finish your access setup.");
+          gateNode.querySelector("#auth-error").hidden = true;
           setMode("login");
+          setMessage(`Account created for ${values.get("email").trim()}. Check your inbox and verify the email, then sign in to submit your access request. Your request appears in the admin Users tab after verification and sign-in.`);
           return;
         }
         const { error: profileError } = await db.rpc("infinico_register_profile", { target_name: values.get("name").trim(), target_phone: values.get("phone").trim() });
@@ -107,7 +114,8 @@
       }
       await start();
     } catch (error) {
-      showError(error.message || "Could not authenticate. Please check your details and try again.");
+      const message = error.message || "Could not authenticate. Please check your details and try again.";
+      showError(/already registered|already exists|user exists/i.test(message) ? "This email already has an account. Sign in instead, or verify the confirmation email if you have not done so." : message);
     } finally {
       button.disabled = false;
       button.innerHTML = `${mode === "signup" ? "Create account" : "Sign in"}<span>→</span>`;
@@ -126,9 +134,10 @@
     signout.id = "signout-button"; signout.className = "icon-button auth-signout"; signout.title = "Sign out"; signout.setAttribute("aria-label", "Sign out"); signout.textContent = "↪";
     signout.addEventListener("click", async () => { await client.auth.signOut(); location.reload(); });
     actions.append(signout);
-    if (profile?.role === "admin") {
-      const admin = document.createElement("button"); admin.className = "admin-menu-button"; admin.textContent = "Manage users"; admin.addEventListener("click", openAdmin); actions.insertBefore(admin, signout);
-    }
+    const adminNav = document.querySelector("#admin-side-nav"), adminLabel = document.querySelector("#admin-nav-label");
+    if (adminNav) adminNav.hidden = !adminOnly();
+    if (adminLabel) adminLabel.hidden = !adminOnly();
+    if (adminOnly()) initializeAdmin();
   }
 
   async function start() {
@@ -146,35 +155,75 @@
       if (profileError || !row) return renderGate("Your account was created, but we couldn't load its workspace profile yet. Please retry.");
     }
     profile = row;
+    window.INFINICO_ADMIN = row.role === "admin" && row.status === "approved";
     if (row.status !== "approved") return renderGate(row.status === "pending" ? "Your request is awaiting administrator approval." : "This account is not approved for workspace access.");
     gateNode?.remove(); gateNode = null;
     shell.hidden = false;
     updateSidebar(session.user);
   }
 
-  function ensureAdminPanel() {
-    if (adminPanel) return adminPanel;
-    adminPanel = document.createElement("div"); adminPanel.className = "admin-backdrop"; adminPanel.hidden = true;
-    adminPanel.innerHTML = `<section class="admin-panel"><header><div><span class="section-kicker">WORKSPACE ACCESS</span><h2>Manage accounts</h2><p>Approve members, revoke access, or create an approved sign-up invitation.</p></div><button class="modal-close" aria-label="Close">×</button></header><div class="admin-summary" id="admin-summary"></div><div class="admin-table-wrap"><table><thead><tr><th>MEMBER</th><th>MOBILE</th><th>STATUS</th><th>ROLE</th><th>JOINED</th><th>ACTION</th></tr></thead><tbody id="admin-users"></tbody></table></div><div class="admin-footer"><h3>Invite an account</h3><p>They will set their own password and required mobile number when they sign up.</p><form id="invite-form"><input type="email" name="email" placeholder="Email address" required><input name="name" placeholder="Full name" required><select name="role"><option value="member">Member</option><option value="admin">Admin</option></select><button class="auth-submit">Create invite</button></form></div></section>`;
-    document.body.append(adminPanel);
-    adminPanel.querySelector(".modal-close").addEventListener("click", () => adminPanel.hidden = true);
-    adminPanel.addEventListener("click", event => { if (event.target === adminPanel) adminPanel.hidden = true; });
-    adminPanel.querySelector("#invite-form").addEventListener("submit", createInvite);
-    return adminPanel;
+  function initializeAdmin() {
+    const saved = JSON.parse(localStorage.getItem("infinico-admin-settings") || "null");
+    if (saved) settings = { ...settings, ...saved };
+    const alerts = document.querySelector("#admin-alerts-enabled"), interval = document.querySelector("#admin-poll-interval");
+    if (alerts) { alerts.checked = settings.alerts; alerts.onchange = () => { settings.alerts = alerts.checked; saveSettings(); }; }
+    if (interval) { interval.value = String(settings.interval); interval.onchange = () => { settings.interval = Number(interval.value); saveSettings(); startAdminPolling(); }; }
+    document.querySelector("#admin-users-refresh")?.addEventListener("click", loadAdminUsers);
+    document.querySelector("#invite-form")?.addEventListener("submit", createInvite);
+    loadAdminUsers();
+    startAdminPolling();
   }
 
-  async function openAdmin() {
-    const panel = ensureAdminPanel(); panel.hidden = false;
-    const body = panel.querySelector("#admin-users"); body.innerHTML = '<tr><td colspan="6">Loading accounts…</td></tr>';
+  function saveSettings() { localStorage.setItem("infinico-admin-settings", JSON.stringify(settings)); }
+
+  function startAdminPolling() {
+    clearInterval(adminPollTimer);
+    if (!adminOnly()) return;
+    pollPending(true);
+    adminPollTimer = setInterval(() => { if (document.visibilityState === "visible") pollPending(false); }, settings.interval);
+  }
+
+  async function pollPending(initial) {
+    if (!adminOnly()) return;
+    const { data, error } = await db.from("infinico_profiles").select("id,email,full_name,status").eq("status", "pending").order("created_at", { ascending: false });
+    if (error) return;
+    const requests = data || [], ids = new Set(requests.map(user => user.id));
+    const badge = document.querySelector("#admin-pending-count");
+    if (badge) { badge.textContent = String(requests.length); badge.hidden = !requests.length; }
+    if (!initial && settings.alerts) {
+      const newRequest = requests.find(user => !pendingIds.has(user.id));
+      if (newRequest) {
+        toast(`New access request: ${newRequest.full_name || newRequest.email}`);
+        if (document.querySelector("#users-page")?.classList.contains("active-page")) loadAdminUsers();
+      }
+    }
+    pendingIds = ids;
+  }
+
+  async function loadAdminUsers() {
+    if (!adminOnly()) return;
+    const body = document.querySelector("#admin-users"); if (!body) return;
+    body.innerHTML = '<tr><td colspan="6">Loading accounts…</td></tr>';
     const { data, error } = await db.from("infinico_profiles").select("id,email,full_name,phone,status,role,created_at").order("created_at", { ascending: false });
     if (error) { body.innerHTML = `<tr><td colspan="6">${safe(error.message)}</td></tr>`; return; }
-    const users = data || [];
-    panel.querySelector("#admin-summary").textContent = `${users.filter(u => u.status === "pending").length} pending · ${users.filter(u => u.status === "approved").length} active · ${users.length} total`;
-    body.innerHTML = users.map(user => `<tr><td><b>${safe(user.full_name || "Account")}</b><small>${safe(user.email || "")}</small></td><td>${safe(user.phone || "—")}</td><td><span class="user-status status-${safe(user.status)}">${safe(user.status)}</span></td><td>${safe(user.role)}</td><td>${new Date(user.created_at).toLocaleDateString()}</td><td>${user.id === profile.id ? "You" : `<button data-user-id="${safe(user.id)}" data-next-status="${user.status === "approved" ? "blocked" : "approved"}">${user.status === "approved" ? "Revoke" : "Approve"}</button>`}</td></tr>`).join("");
+    renderAdminUsers(data || [], false);
+  }
+
+  function renderAdminUsers(users, pendingOnly) {
+    if (!adminOnly()) return;
+    const body = document.querySelector("#admin-users"); if (!body) return;
+    const allUsers = pendingOnly ? null : users;
+    const pending = pendingOnly ? users : users.filter(user => user.status === "pending");
+    const shown = pendingOnly ? pending : allUsers;
+    const count = document.querySelector("#admin-users-count"), summary = document.querySelector("#admin-users-summary");
+    if (count) count.textContent = String(pendingOnly ? pending.length : users.length);
+    if (summary) summary.textContent = pendingOnly ? `${pending.length} pending approval request${pending.length === 1 ? "" : "s"}` : `${pending.length} pending · ${users.filter(u => u.status === "approved").length} active · ${users.length} total`;
+    if (!shown.length) { body.innerHTML = `<tr><td colspan="6">${pendingOnly ? "No pending requests." : "No user accounts yet."}</td></tr>`; return; }
+    body.innerHTML = shown.map(user => `<tr><td><b>${safe(user.full_name || "Account")}</b><small>${safe(user.email || "")}</small></td><td>${safe(user.phone || "—")}</td><td><span class="user-status status-${safe(user.status)}">${safe(user.status)}</span></td><td>${safe(user.role)}</td><td>${new Date(user.created_at).toLocaleDateString()}</td><td>${user.id === profile.id ? "You" : `<button data-user-id="${safe(user.id)}" data-next-status="${user.status === "approved" ? "blocked" : "approved"}">${user.status === "approved" ? "Revoke" : "Approve"}</button>`}</td></tr>`).join("");
     body.querySelectorAll("button[data-user-id]").forEach(button => button.addEventListener("click", async () => {
       button.disabled = true;
       const { error: updateError } = await db.rpc("infinico_admin_set_user_access", { target_user_id: button.dataset.userId, next_status: button.dataset.nextStatus });
-      if (updateError) { toast(updateError.message); button.disabled = false; } else openAdmin();
+      if (updateError) { toast(updateError.message); button.disabled = false; } else { toast(button.dataset.nextStatus === "approved" ? "User access approved." : "User access revoked."); loadAdminUsers(); pollPending(true); }
     }));
   }
 
@@ -185,7 +234,7 @@
     const { error } = await db.rpc("infinico_admin_create_invite", { target_email: values.get("email").trim(), target_name: values.get("name").trim(), target_role: values.get("role") });
     button.disabled = false;
     if (error) { toast(error.message); return; }
-    form.reset(); toast("Approved sign-up invite created."); openAdmin();
+    form.reset(); toast("Approved sign-up invite created."); loadAdminUsers();
   }
 
   if (!config.neonAuthUrl || !config.neonDataApiUrl) {
