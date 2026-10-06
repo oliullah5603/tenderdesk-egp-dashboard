@@ -8,6 +8,8 @@
   let db;
   let profile = null;
   let adminPollTimer = null;
+  let pendingCheckTimer = null;
+  let completeProfileUser = null;
   let pendingIds = new Set();
   let settings = { alerts: true, interval: 15000 };
   let gateNode = null;
@@ -29,17 +31,28 @@
     gateNode.querySelectorAll("[data-auth-tab]").forEach(button => button.classList.toggle("active", button.dataset.authTab === next));
     const form = gateNode.querySelector("#auth-form");
     const signup = next === "signup";
-    form.elements.name.closest("label").hidden = !signup;
-    form.elements.phone.closest("label").hidden = !signup;
-    form.elements.name.hidden = !signup;
-    form.elements.phone.hidden = !signup;
-    form.elements.name.required = signup;
-    form.elements.phone.required = signup;
-    form.querySelector(".auth-submit").innerHTML = `${signup ? "Create account" : "Sign in"}<span>→</span>`;
-    gateNode.querySelector(".auth-footnote").textContent = signup
-      ? "Your request will be reviewed by an administrator before workspace access is granted."
+    const complete = next === "complete", pending = next === "pending", profileFields = signup || complete;
+    gateNode.querySelector(".auth-tabs").hidden = complete || pending;
+    gateNode.querySelector("[name='email']").closest("label").hidden = complete || pending;
+    gateNode.querySelector("[name='password']").closest("label").hidden = pending;
+    form.elements.name.closest("label").hidden = !profileFields;
+    form.elements.phone.closest("label").hidden = !profileFields;
+    form.elements.name.hidden = !profileFields;
+    form.elements.phone.hidden = !profileFields;
+    form.elements.name.required = profileFields;
+    form.elements.phone.required = profileFields;
+    form.elements.email.required = !complete && !pending;
+    form.elements.password.required = !pending && !complete;
+    form.hidden = pending;
+    form.querySelector(".auth-submit").hidden = pending;
+    form.querySelector(".auth-submit").innerHTML = `${signup ? (inviteEmail ? "Set password" : "Create account") : complete ? "Finish setup" : "Sign in"}<span>→</span>`;
+    gateNode.querySelector(".auth-pending-actions").hidden = !pending;
+    gateNode.querySelector(".auth-footnote").textContent = complete
+      ? "Your sign-in worked. Add your name and mobile number once to finish setting up this workspace account."
+      : pending ? "We will check again automatically while this page stays open."
+      : signup ? "Your request will be reviewed by an administrator before workspace access is granted."
       : "Need access? Create an account. New accounts need administrator approval.";
-    setMessage(signup ? "Request access to your procurement workspace." : "Sign in to discover Bangladesh's public opportunities.");
+    setMessage(complete ? "Finish your workspace profile to continue." : pending ? "Your access request is waiting for administrator approval." : signup ? "Request access to your procurement workspace." : "Sign in to discover Bangladesh's public opportunities.");
   };
 
   function adminOnly() { return profile?.role === "admin" && profile?.status === "approved"; }
@@ -70,11 +83,14 @@
             <button class="auth-submit" type="submit">Sign in<span>→</span></button>
           </form>
           <p class="auth-footnote">Need access? Create an account. New accounts need administrator approval.</p>
+          <div class="auth-pending-actions" hidden><button type="button" id="check-access">Check approval</button><button type="button" id="gate-signout">Sign out</button></div>
           <div class="auth-error" id="auth-error" role="alert" hidden></div>
         </div></section>`;
       document.body.append(gateNode);
       gateNode.querySelectorAll("[data-auth-tab]").forEach(button => button.addEventListener("click", () => setMode(button.dataset.authTab)));
       gateNode.querySelector("#auth-form").addEventListener("submit", submitAuth);
+      gateNode.querySelector("#check-access").addEventListener("click", start);
+      gateNode.querySelector("#gate-signout").addEventListener("click", async () => { clearInterval(pendingCheckTimer); pendingCheckTimer = null; await client.auth.signOut(); location.reload(); });
       if (inviteEmail) {
         const form = gateNode.querySelector("#auth-form");
         form.elements.email.value = inviteEmail;
@@ -109,7 +125,13 @@
     gateNode.querySelector("#auth-error").hidden = true;
     try {
       let authResult;
-      if (mode === "signup") {
+      if (mode === "complete") {
+        if (!completeProfileUser) throw new Error("Your sign-in has expired. Please sign in again to finish setup.");
+        const { error: profileError } = await db.rpc("infinico_register_profile", { target_name: values.get("name").trim(), target_phone: values.get("phone").trim() });
+        if (profileError) throw profileError;
+        completeProfileUser = null;
+        await start();
+      } else if (mode === "signup") {
         authResult = await client.auth.signUp({ email: values.get("email").trim(), password: values.get("password"), options: { data: { name: values.get("name").trim(), phone: values.get("phone").trim() } } });
         if (authResult.error) throw authResult.error;
         const session = authResult.data?.session;
@@ -121,8 +143,7 @@
             : `Account created for ${values.get("email").trim()}. Verify the email from your inbox, then sign in to submit your access request. The admin will see it in Users.`);
           return;
         }
-        const { error: profileError } = await db.rpc("infinico_register_profile", { target_name: values.get("name").trim(), target_phone: values.get("phone").trim() });
-        if (profileError) throw profileError;
+        await start();
       } else {
         authResult = await client.auth.signInWithPassword({ email: values.get("email").trim(), password: values.get("password") });
         if (authResult.error) throw authResult.error;
@@ -133,7 +154,7 @@
       showError(/already registered|already exists|user exists/i.test(message) ? "This email already has an account. Sign in instead, or verify the confirmation email if you have not done so." : message);
     } finally {
       button.disabled = false;
-      button.innerHTML = `${mode === "signup" ? "Create account" : "Sign in"}<span>→</span>`;
+      if (button.isConnected) button.innerHTML = `${mode === "signup" ? (inviteEmail ? "Set password" : "Create account") : mode === "complete" ? "Finish setup" : "Sign in"}<span>→</span>`;
     }
   }
 
@@ -158,20 +179,42 @@
   async function start() {
     const { data, error } = await client.auth.getSession();
     const session = data?.session;
-    if (error || !session?.user) { profile = null; return renderGate(); }
+    if (error || !session?.user) { clearInterval(pendingCheckTimer); pendingCheckTimer = null; completeProfileUser = null; profile = null; window.INFINICO_ADMIN = false; return renderGate(); }
     let { data: row, error: profileError } = await db.from("infinico_profiles").select("id,email,full_name,phone,status,role,created_at").eq("id", session.user.id).maybeSingle();
     if (profileError) return renderGate("We couldn't check workspace access. Please try again in a moment.");
     if (!row) {
       const metadata = session.user.user_metadata || {};
-      if (!metadata.name || !metadata.phone) return renderGate("This account has no workspace profile yet. Sign up with your name and mobile number first.");
+      if (!metadata.name || !metadata.phone) {
+        completeProfileUser = session.user;
+        renderGate("Your sign-in succeeded, but this account still needs its workspace profile.");
+        gateNode.querySelector("[name='name']").value = metadata.name || inviteName || "";
+        gateNode.querySelector("[name='phone']").value = metadata.phone || "";
+        setMode("complete");
+        return;
+      }
       const { error: registerError } = await db.rpc("infinico_register_profile", { target_name: metadata.name, target_phone: metadata.phone });
-      if (registerError) return renderGate(registerError.message || "We couldn't finish your workspace profile. Please try again.");
+      if (registerError) {
+        completeProfileUser = session.user;
+        renderGate(registerError.message || "We couldn't finish your workspace profile. Enter your name and mobile number to retry.");
+        gateNode.querySelector("[name='name']").value = metadata.name || inviteName || "";
+        gateNode.querySelector("[name='phone']").value = metadata.phone || "";
+        setMode("complete");
+        return;
+      }
       ({ data: row, error: profileError } = await db.from("infinico_profiles").select("id,email,full_name,phone,status,role,created_at").eq("id", session.user.id).maybeSingle());
       if (profileError || !row) return renderGate("Your account was created, but we couldn't load its workspace profile yet. Please retry.");
     }
     profile = row;
+    completeProfileUser = null;
     window.INFINICO_ADMIN = row.role === "admin" && row.status === "approved";
-    if (row.status !== "approved") return renderGate(row.status === "pending" ? "Your request is awaiting administrator approval." : "This account is not approved for workspace access.");
+    if (row.status === "pending") {
+      renderGate("Your access request is waiting for administrator approval.");
+      setMode("pending");
+      if (!pendingCheckTimer) pendingCheckTimer = setInterval(() => { if (document.visibilityState === "visible") start(); }, 10000);
+      return;
+    }
+    clearInterval(pendingCheckTimer); pendingCheckTimer = null;
+    if (row.status !== "approved") return renderGate("This account is not approved for workspace access.");
     gateNode?.remove(); gateNode = null;
     shell.hidden = false;
     updateSidebar(session.user);

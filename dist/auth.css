@@ -58,3 +58,7 @@
 .admin-footer form{grid-template-columns:1.05fr 1fr 140px auto}
 .admin-footer .auth-submit{height:42px}
 @media(max-width:760px){.welcome-gate{grid-template-columns:1fr}.welcome-art{min-height:250px;padding:24px;border-right:0;border-bottom:1px solid #ececea}.welcome-logo{width:min(240px,72%)}.welcome-message{margin:25px 0 0}.welcome-message h2{font-size:28px;margin:10px 0 7px}.welcome-message p{font-size:12px;line-height:1.55}.welcome-art>small{margin-top:22px}.welcome-form-wrap{padding:32px 22px}.admin-footer form{grid-template-columns:1fr 1fr}.admin-footer input:first-child{grid-column:1/-1}}
+.auth-pending-actions { display:flex; gap:10px; margin-top:18px; }
+.auth-pending-actions[hidden] { display:none; }
+.auth-pending-actions button { min-height:40px; flex:1; border:1px solid #e6e6e6; border-radius:4px; background:#fff; color:#555; font:500 12px Poppins,sans-serif; cursor:pointer; }
+.auth-pending-actions button:first-child { border-color:#f4c49f; color:#df650a; }
