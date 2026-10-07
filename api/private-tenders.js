@@ -76,6 +76,10 @@ function parseFeatured(html) {
     const inviterType = classifyOrganization(inviter);
     const sources = [...publishedRaw.matchAll(/\[([^\]]+)\]/g)].map((match) => match[1].trim());
     const imageUrl = noticeImagePath ? new URL(noticeImagePath, SOURCE).href : "";
+    const imageToken = imageUrl ? new URL(imageUrl).searchParams.get("tp") : "";
+    const imageViewerUrl = imageToken
+      ? `/api/private-tender-image?id=${encodeURIComponent(titleLink[2])}&tp=${encodeURIComponent(imageToken)}`
+      : "";
     records.push({
       id: tenderNumber || titleLink[2],
       sourceRecordId: titleLink[2],
@@ -93,6 +97,7 @@ function parseFeatured(html) {
       securityAmount,
       sourceUrl: detailUrl,
       documentUrl: imageUrl,
+      imageViewerUrl,
       sourceName: "TenderBazar",
       status: "pending_verification",
       eligibility: "Open the original TenderBazar notice to review complete requirements and submission instructions.",
