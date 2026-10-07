@@ -26,6 +26,7 @@
         <button class="nav-item" data-page="insights"><span class="nav-icon">▥</span><span>Market insights</span></button>
         <button class="nav-item" data-page="saved"><span class="nav-icon">♡</span><span>Saved tenders</span><span class="nav-count muted" id="saved-count">0</span></button>
         <button class="nav-item" data-page="awards"><span class="nav-icon">▣</span><span>Contract awards</span><span class="nav-count muted" id="award-nav-count">BPPA</span></button>
+        <button class="nav-item" data-page="private"><span class="nav-icon">◇</span><span>Private tenders</span><span class="nav-count muted" id="private-nav-count">TB</span></button>
       </nav>
       <div class="sidebar-label admin-nav-label" id="admin-nav-label" hidden>ADMINISTRATION</div>
       <nav class="side-nav admin-side-nav" id="admin-side-nav" aria-label="Administration" hidden>
@@ -112,6 +113,18 @@
             <div class="table-footer"><span id="award-range">Loading official results…</span><div class="pagination"><button class="page-btn" id="award-prev" aria-label="Previous page">‹</button><span class="award-page-number" id="award-page-number">1</span><button class="page-btn" id="award-next" aria-label="Next page">›</button></div></div>
           </section>
           <footer class="page-footer"><span>Data source: Bangladesh Public Procurement Authority</span><a href="https://bppa.gov.bd/contract-award/contract-award-list.html" target="_blank" rel="noreferrer">Open official award register ↗</a></footer>
+        </section>
+        <section id="private-page" class="page" hidden>
+          <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> PRIVATE ORGANIZATIONS · TENDERBAZAR</div><h1>Private <em>tenders.</em></h1><p class="intro">Publicly visible organization notices, with links back to the original TenderBazar record.</p></div><div class="heading-date"><span class="date-icon">◷</span><span><b id="private-updated">Connecting to TenderBazar…</b><small>Public featured feed</small></span></div></div>
+          <div class="preview-callout" id="private-status"><span class="callout-icon">◷</span><span><b>Connecting to TenderBazar</b> Loading its publicly visible featured notices…</span></div>
+          <section class="feed-panel private-panel">
+            <div class="section-top"><div><div class="section-kicker">PRIVATE ORGANIZATION OPPORTUNITIES</div><h2>Private tenders <span class="heading-count" id="private-total">—</span></h2><p>Source details and original notice links stay attached to each record.</p></div><div class="section-actions"><button class="refresh-button" id="private-refresh"><span>↻</span> Refresh</button><a class="refresh-button" href="https://www.tenderbazar.com/#1" target="_blank" rel="noreferrer">Open TenderBazar ↗</a></div></div>
+            <div class="private-filters"><label class="search-box private-search"><span class="search-glyph">⌕</span><input id="private-search" type="search" placeholder="Search organization, title, tender ID or district…" autocomplete="off"></label><label class="filter-control"><span>ORGANIZATION MATCH</span><select id="private-scope"><option value="likely">Likely private</option><option value="all">All public featured</option><option value="review">Needs review</option></select></label><label class="filter-control"><span>STATUS</span><select id="private-status-filter"><option value="open">Open tenders</option><option value="all">All statuses</option><option value="expired">Expired</option></select></label></div>
+            <div class="private-source-note"><b>Source coverage:</b> TenderBazar’s homepage exposes a featured list publicly. “Likely private” is inferred from inviter names because the public list does not consistently expose an organization-type field. Verify the source record before acting.</div>
+            <div class="tender-cards private-tender-cards" id="private-cards"></div>
+            <div class="table-footer"><span id="private-range">Loading public records…</span><div class="pagination" id="private-pagination"></div></div>
+          </section>
+          <footer class="page-footer"><span>Source: TenderBazar public listing. Verify deadlines and submission instructions on the original notice.</span><a href="https://www.tenderbazar.com/#1" target="_blank" rel="noreferrer">Open source ↗</a></footer>
         </section>
         <section id="users-page" class="page" hidden>
           <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> ADMINISTRATION</div><h1>Workspace <em>users.</em></h1><p class="intro">Review access requests, manage member access and send invitations.</p></div></div>

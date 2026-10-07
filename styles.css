@@ -184,3 +184,19 @@ html,body{background:#fbfbfb;color:#7e7e7e;font-family:Poppins,"Hind Siliguri",s
 .invite-link-result > div { display:flex; gap:8px; }
 .invite-link-result input { flex:1; min-width:0; height:40px; padding:0 10px; border:1px solid #e8e8e8; border-radius:3px; background:#fff; color:#555; font:11px Poppins,sans-serif; }
 .invite-link-result button { flex:none; padding:0 13px; border:0; border-radius:3px; background:#ff720d; color:white; font:500 11px Poppins,sans-serif; cursor:pointer; }
+.private-filters { display:grid; grid-template-columns:minmax(260px,2fr) repeat(2,minmax(170px,1fr)); gap:12px; margin:18px 20px 12px; }
+.private-search { min-width:0; }
+.private-source-note { margin:0 20px 17px; padding:11px 13px; border:1px solid #eee7dc; background:#fffaf2; color:#776c5d; font-size:10px; line-height:1.65; }
+.private-source-note b { color:#514b42; font-weight:600; }
+.private-tender-cards { padding-top:0; }
+.private-title-link { display:block; color:#222; text-decoration:none; }
+.private-title-link:hover { color:#e96500; }
+.private-match.likely-private { background:#e9f5ec; border-color:#cce8d2; color:#38764a; }
+.private-match.review { background:#fff8eb; border-color:#f1e2c1; color:#8c7136; }
+.private-match.public { background:#f2f3f4; border-color:#e4e6e8; color:#687078; }
+.private-source-links { display:grid; gap:7px; margin-top:10px; }
+.private-source-links .card-official { margin-top:0; }
+.private-image-link { display:block; padding:8px 10px; border:1px solid #e8e8e8; border-radius:3px; color:#777; font-size:10px; text-align:center; text-decoration:none; }
+.private-image-link:hover { border-color:#ffcfab; background:#fff9f3; color:#e96500; }
+@media(max-width:760px) { .private-filters { grid-template-columns:1fr 1fr; margin:15px 14px 10px; } .private-search { grid-column:1/-1; } .private-source-note { margin-left:14px; margin-right:14px; } }
+@media(max-width:440px) { .private-filters { grid-template-columns:1fr; } .private-search { grid-column:auto; } }

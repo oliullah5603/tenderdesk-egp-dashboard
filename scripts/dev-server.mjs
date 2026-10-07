@@ -3,6 +3,7 @@ import { createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
 import path from "node:path";
 import { Readable } from "node:stream";
+import privateTenders from "../api/private-tenders.js";
 
 const root = path.resolve("dist");
 const host = "127.0.0.1";
@@ -25,6 +26,17 @@ const assets = new Map([
 ]);
 
 const server = createServer(async (request, response) => {
+  if (new URL(request.url, `http://${host}:${port}`).pathname === "/api/private-tenders") {
+    const result = {
+      statusCode: 200,
+      headers: {},
+      setHeader(name, value) { this.headers[name.toLowerCase()] = value; },
+      status(code) { this.statusCode = code; return this; },
+      json(body) { response.writeHead(this.statusCode, this.headers); response.end(JSON.stringify(body)); }
+    };
+    await privateTenders({ method: request.method }, result);
+    return;
+  }
   if (new URL(request.url, `http://${host}:${port}`).pathname === "/api/tenders" && request.method === "GET") {
     let sources;
     try {
