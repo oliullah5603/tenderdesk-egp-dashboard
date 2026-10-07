@@ -7,12 +7,6 @@
     },
     "api/contract-awards.js": {
       "maxDuration": 30
-    },
-    "api/private-tenders.js": {
-      "maxDuration": 30
-    },
-    "api/private-tender-image.js": {
-      "maxDuration": 30
     }
   }
 }
